@@ -5,8 +5,15 @@ introduction:
 - topic in generale (RBM);
   - descrizione RBM;
 - methods (da integrare nel paragrafo successivo);
- 
--
+- accenno dei prossimi paragrafi
+
+
+methods:
+- come si inizializzano i theta (teorico)
+- Z differente per spin e non spin (teorico)
+- a livello operativo sul codice python (computation)
+- optimazers (computation)
+
   
   
   
@@ -23,13 +30,3 @@ SCHEMA:
 1 pag - meth
 2/3 pags - results and conclusions
 ___
-
-
-
-
-
-Concerning the training process of RBM, $\mathbf{v}$ is setted using real data. Weights $w_{ij}$ are initialized sampling values from a Gaussian distribution of mean $0$ and standard deviation $0.01$. Biases $b_j$ of hidden units are initialized to $0$, although using $-4$ encourages sparsity in the hidden layer, which can be useful for analysis of units activation.
-
-Thus $\mathbf{h}$ is evaluated by $(1a)$ before passed to $(1b)$ in order to compute back $\mathbf{v}$. In such evaluation it is convenient to set $a_i$ to be $\log[p_i/(1-p_i)]$; fixed the $i$-th visible unit, $p_i$ is defined as the number of times such unit is on over the whole training array set, normalized over the size of the set. Referring to $(1b)$, the choice of shifting the sigmoid $\sigma(x)$ by the function $a_i=\log[p_i/(1-p_i)]$ of the average $p_i$ ensures that the units can activate properly, even given initial weights $w_{ij}$ close to $0$.
-
-The initialization of biases $a_i$, firstly proposed by Hinton, makes hidden units able to activate and differentiate better their activation based on data, avoiding the risk of getting stuck on values near to $0$.

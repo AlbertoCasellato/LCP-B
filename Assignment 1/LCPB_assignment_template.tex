@@ -7,6 +7,12 @@
 \definecolor{linkcolor}{rgb}{0,0,0.65} %hyperlink
 \usepackage[pdftex,colorlinks=true, pdfstartview=FitV, linkcolor= linkcolor, citecolor= linkcolor, urlcolor= linkcolor, hyperindex=true,hyperfigures=true]{hyperref} %hyperlink%
 
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{\z@}%
+	{-3.5ex \@plus -1ex \@minus -.2ex}{2.3ex \@plus.2ex}%
+	{\normalfont\bfseries\raggedright}}
+\makeatother
+
 
 
 \begin{document}
@@ -37,55 +43,46 @@
 \maketitle
 
 
-\paragraph{\bf RULES}
-{
-\bf
-\begin{itemize}
-\item Compile the {\tt latex} file (found in the google folder from moodle) with the format of this template,  without changing the parameters (page size etc.).
-\item The text, figures, and references should be of about four pages.
-\item There is a deadline for submission is written in moodle.
-\item Write a statement in which the contribution of each member of the group is specified.
-\end{itemize}
-}
+\section{1. Introduction}
 
-\section{Introduction}
+The main goal of this assignment is to explore how the performance of an RBM changes for different choices of the hyperparameters of the model, using the MNIST digits as the database; in particular using the log-likelihood evaluation we explore the trend of the model during the learning process as the number of epochs increases.
 
-The main goal of this assignment is to explore how the performance of an RBM changes as the hyperparameters of the model changes using the MNIST database.
-
-Restricted Boltzmann Machines (RBM) are a powerful kind of generative models designed to accomplish training processes relatively fast. In RBMs, a set of binary visible units $i$ of state $v_i$ is symmetrically connected to a set of binary hidden units $j$ of state $h_j$; the continuos weight $w_{ij}$ quantifies the strength between units $i$ and $j$. RBMs use an energy function to define the probability distribution over the input data. In the training process the energy of the configuration is minimized by adjusting the parameters $\theta$. The most common trainint algorithm is contrastive divergence which allows to approximate the gradient of the likelihood to update the parameters. During the process a cyclic Gibbs sampling is performed setting the visible units given the hidden ones and vice versa, according to the following probabilities:
+Restricted Boltzmann Machines (RBM) are a powerful kind of generative models designed to accomplish training processes relatively fast. In RBMs, a set of binary visible units $i$ of state $v_i$ is symmetrically connected to a set of binary hidden units $\mu$ of state $h_\mu$; the continuos weight $w_{i\mu}$ quantifies the strength between unit $i$ and unit $\mu$ (see Figure~\ref{fig:RBM_architecture}). RBMs use an energy function to define the probability distribution over the input data. In the training process the energy of the configuration is minimized by adjusting the parameters $\theta$. The most common training algorithm is contrastive divergence which allows to approximate the gradient of the likelihood to update the parameters. During this process, a cyclic Gibbs sampling is performed setting the visible units given the hidden ones and vice versa, according to the following probabilities:
 
 \begin{equation}
-	p(h_j=1\ |\ \mathbf{v}) = \sigma(b_j + \sum_iv_iw_{ij})
+	p(h_\mu=1\ |\ \mathbf{v}) = \sigma(b_\mu + \sum_{i}v_iw_{i\mu})
 	\label{eq:p_of_h}
 \end{equation}
 \begin{equation}
-	p(v_i=1\ |\ \mathbf{h}) = \sigma(a_i + \sum_jh_jw_{ij})
+	p(v_i=1\ |\ \mathbf{h}) = \sigma(a_i + \sum_{\mu}h_{\mu}w_{i\mu})
 	\label{eq:p_of_v}
 \end{equation}
 
-where $\sigma(x)=1/(1+e^{-x})$ is the logistic sigmoid function, $a_i$ is the bias of the $i$-th visible unit and $b_j$ is the bias of the $j$-th hidden unit; they act shifting the sigmoid function $\sigma(x)$. The absence of links among units of the same type simplifies the training process. Moreover, the number of iterations of $(1a)$ and $(1b)$ can be setted to $1$ if real data is used to fix $\mathbf{v}$ in the first place.
+where $\sigma(x)=1/(1+e^{-x})$ is the logistic sigmoid function, $a_i$ is the bias of the $i$-th visible unit and $b_\mu$ is the bias of the $\mu$-th hidden unit; they act shifting the sigmoid function $\sigma(x)$. The absence of links among units of the same type simplifies the training process. Moreover, the number of iterations of Eq.~\ref{eq:p_of_h} and Eq.~\ref{eq:p_of_v} can be setted to $1$ if real data is used to fix $\mathbf{v}$ in the first place.
+\\
+\\
+\\
+The goodness of the models is evaluated by computing the log-likelihood $\mathcal{L}$ of the data:
+
+\begin{equation}
+	\mathcal{L}=\frac{1}{M}\sum_{m=1}^{M}{\mathfrak{l}_{\theta}(v^{(m)})}
+	\label{eq:Loglikelihood}
+\end{equation}
+\begin{equation}
+	\mathfrak{l}_{\theta}(v^{(m)})=\log\sum_{h}{e^{-E(v,h)}-\log{Z}}
+	\label{eq:loglikelihood}
+\end{equation}
+
+where $M$ is the number of data points, $E(v,h)$ is the energy function, $Z$ is the partition function and, in Eq.~\ref{eq:loglikelihood}, the index $h$ of the summation represents each possible state of the hidden layer.
 
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
 	\includegraphics[width=0.44\textwidth]{RBM_structure.png}
-	\caption{A Restricted Boltzmann Machine (RBM) is made up of visible units, denoted as $v_i$, and hidden units, represented as $h_\mu$. These units engage with one another through interactions characterized by the expression $W_{i\mu}v_ih_\mu$.Notably, there are no direct interactions among the visible units or among the hidden units themselves.}
-	\label{fig:y}
+	\caption{A Restricted Boltzmann Machine (RBM) is made up of visible units, denoted as $v_i$, and hidden units, represented as $h_\mu$. These units engage with one another through interactions characterized by the weights $W_{i\mu}$. Notably, there are no direct interactions among the visible units or among the hidden units themselves.}
+	\label{fig:RBM_architecture}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%
 
-The goodness of the models is evaluated by computing the log-likelihood of the data.
-
-\begin{equation}
-	\mathcal{L}=\frac{1}{M}\sum_{m=1}^{M}{\mathfrak{l}_{\theta}(x^{(m)})}
-	\label{eq:p_of_v}
-\end{equation}
-\begin{equation}
-	\mathfrak{l}_{\theta}(x^{(m)})=\log\sum_{z}{e^{-E(x,z)}-\log{Z}}
-	\label{eq:p_of_v}
-\end{equation}
-\\
-\\
-\\
 
 The topic of your assignment is specified at the lesson.
 It requires you to describe your findings in one of the exercises.
@@ -136,7 +133,18 @@ In Ubuntu there is a similar installation with \texttt{sudo apt install}, maybe 
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%
 
- \section{Methods}
+\section{2. Methods}
+\subsection{2.1. Theory}
+
+Concerning the training process of RBM, $\mathbf{v}$ is setted using real data. Weights $w_{i\mu}$ are initialized sampling values from a Gaussian distribution of mean $0$ and standard deviation $0.01$. Biases $b_\mu$ of hidden units are initialized to $0$. Thus $\mathbf{h}$ is evaluated by Eq.~\ref{eq:p_of_h} before passed to Eq.~\ref{eq:p_of_v} in order to compute back $\mathbf{v}$. In such evaluation it is convenient to set $a_i=\log[p_i/(1-p_i)]$; fixed the $i$-th visible unit, $p_i$ is defined as the number of times such unit is on over the whole training array set, normalized over the size of the set. Referring to Eq.~\ref{eq:p_of_v}, the choice of shifting the sigmoid $\sigma(x)$ by the function $\log[p_i/(1-p_i)]$ of the average $p_i$ ensures that the units can activate properly, even given initial weights $w_{i\mu}$ close to $0$.
+
+The initialization of biases $a_i$, firstly proposed by Hinton, makes hidden units able to activate and differentiate better their activation based on data, avoiding the risk of getting stuck on values near to $0$.
+
+\subsection{2.2. Computation}
+
+
+
+
 
  Here describe which tools you decided to use for solving the problem, with
  equations
@@ -206,7 +214,7 @@ momentum & $p$ & $v$
  
 
 
-\section{Results}
+\section{3. Results}
 
 
 Describe what you found.
@@ -289,7 +297,7 @@ Cite Table~\ref{tab:1} to collect useful data in a clear way.
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz.
 
-\section{Conclusions}
+\section{4. Conclusions}
 
 Discuss the key aspects that we can take home from this work.
 
