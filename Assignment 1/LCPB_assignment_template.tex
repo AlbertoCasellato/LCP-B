@@ -11,7 +11,17 @@
 \renewcommand{\section}{\@startsection{section}{1}{\z@}%
 	{-3.5ex \@plus -1ex \@minus -.2ex}{2.3ex \@plus.2ex}%
 	{\normalfont\bfseries\raggedright}}
+
+% Ripristina la definizione di \subsection per allineamento a sinistra
+\renewcommand{\subsection}[1]{%
+	\@startsection{subsection}{2}{\z@}%
+	{3.5ex \@plus 1ex \@minus .2ex}{-1em}%
+	{\normalfont\bfseries\raggedright #1}%
+}
+
 \makeatother
+
+
 
 
 
@@ -47,7 +57,7 @@
 
 The main goal of this assignment is to explore how the performance of an RBM changes for different choices of the hyperparameters of the model, using the MNIST digits as the database; in particular using the log-likelihood evaluation we explore the trend of the model during the learning process as the number of epochs increases.
 
-Restricted Boltzmann Machines (RBM) are a powerful kind of generative models designed to accomplish training processes relatively fast. In RBMs, a set of binary visible units $i$ of state $v_i$ is symmetrically connected to a set of binary hidden units $\mu$ of state $h_\mu$; the continuos weight $w_{i\mu}$ quantifies the strength between unit $i$ and unit $\mu$ (see Figure~\ref{fig:RBM_architecture}). RBMs use an energy function to define the probability distribution over the input data. In the training process the energy of the configuration is minimized by adjusting the parameters $\theta$. The most common training algorithm is contrastive divergence which allows to approximate the gradient of the likelihood to update the parameters. During this process, a cyclic Gibbs sampling is performed setting the visible units given the hidden ones and vice versa, according to the following probabilities:
+Restricted Boltzmann Machines (RBM) are a powerful kind of generative models designed to accomplish training processes relatively fast. In RBMs, a set of $D$ binary visible units $i$ of state $v_i$ is symmetrically connected to a set of $L$ binary hidden units $\mu$ of state $h_\mu$; the continuos weight $w_{i\mu}$ quantifies the strength between unit $i$ and unit $\mu$ (see Figure~\ref{fig:RBM_architecture}). RBMs use an energy function to define the probability distribution over the input data. In the training process the energy of the configuration is minimized by adjusting the parameters $\theta$. The most common training algorithm is contrastive divergence which allows to approximate the gradient of the likelihood to update the parameters. During this process, a cyclic Gibbs sampling is performed setting the visible units given the hidden ones and vice versa, according to the following probabilities:
 
 \begin{equation}
 	p(h_\mu=1\ |\ \mathbf{v}) = \sigma(b_\mu + \sum_{i}v_iw_{i\mu})
@@ -73,7 +83,7 @@ The goodness of the models is evaluated by computing the log-likelihood $\mathca
 	\label{eq:loglikelihood}
 \end{equation}
 
-where $M$ is the number of data points, $E(v,h)$ is the energy function, $Z$ is the partition function and, in Eq.~\ref{eq:loglikelihood}, the index $h$ of the summation represents each possible state of the hidden layer.
+where $M$ is the number of data points, $Z$ is the partition function, $E(v,h)=G(h)\prod_{i}{e^{H_i(h)v_i}}$ is the energy function, with $G(h)=\prod_{\mu}{e^{b_{\mu}h_{\mu}}}$ and $H_i(h)$ defined as $H_i(h)=a_i+\sum_{\mu}w_{i\mu}h_\mu$, and, in Eq.~\ref{eq:loglikelihood}, the index $h$ of the summation represents each possible state of the hidden layer.
 
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
@@ -83,71 +93,31 @@ where $M$ is the number of data points, $E(v,h)$ is the energy function, $Z$ is 
 \end{figure}
 %%%%%%%%%%%%%%%%%%%
 
-
-The topic of your assignment is specified at the lesson.
-It requires you to describe your findings in one of the exercises.
-
-In this introduction,
-you should describe the main topic in general terms, introducing what you want to discover, why, and which
-methods you use do perform this study.
-There could also be citations like this \cite{pap1} to papers, websites, etc. forming the list of references that other people could be interested in consulting for a better understanding your points.
-
-\paragraph{\bf Tips}
-\begin{itemize}
-\item In English use sentences shorter than what you might normally be using in Italian, German, etc...
-\item Possibly, Explain concepts at a level which is accessible to everybody.
-\item Do not use colloquial forms in scientific writing, thus avoid it's, aren't, don't, etc.
-\item Do not change the time of verbs; it is simpler to speak in simple present, however also writing always in past tense is fine.
-\item In figures, use fonts that match the \underline{size} of the main text fonts (tiny fonts should be avoided). Use lines with different dashing, color, and symbol as appropriate for better distinguishing the curves. Use log scale when it is better for highlighting smaller scales or flattening larger scales. 
-\item Remember the grid explained in the intro video of the course, which will be used for evaluations. It contains suggestions for improving the text.
-\end{itemize}
-
-
-
-
-\paragraph{\bf Latex --}
-
-A modern online tool to handle and share latex files is {\em Overleaf}. The other option is a standard latex installation on the computer.
-Locally, this text is compiled with the command \texttt{pdflatex} and is based on \texttt{revtex}.
-Packages (of which, maybe not all are needed) in Arch Linux may be installed via\\
-\texttt{
-  sudo pacman -S texlive-core texlive-bibtexextra texlive-fontsextra  texlive-formatsextra texlive-latexextra texlive-pictures texlive-pstricks texlive-publishers  texlive-science}
-
-\vspace{0.2cm}
-In Ubuntu there is a similar installation with \texttt{sudo apt install}, maybe \texttt{sudo apt install texlive-full} if you want to lose less time to pick the right packages. Similar tools should be available in Windows and via e.g.~macports on Mac OS.
-
-%%%%%%%%%%%%%%%%%%%
-\begin{figure*}[!tb]
-  \centering
-  \includegraphics[width=0.3\textwidth]{fig1a.png}
-  \hskip 1mm
-  \includegraphics[width=0.3\textwidth]{fig1a.png}
-  \hskip 1mm
-  \includegraphics[width=0.3\textwidth]{fig1a.png}
-  \vskip 1mm
-  \includegraphics[width=0.455\textwidth]{fig1a.png}
-  \hskip 1mm
-  \includegraphics[width=0.455\textwidth]{fig1a.png}
-  \caption{Description of the panels: (a)..... (b)... etc. This caption should give enough info on the content of figures to make them mostly readable without consulting the main text. However, repetitions with the main text should e avoided if possible. {\color{red} If this format is difficult to frame in the page you want, just break it into multiple single figures.}}
-  \label{fig:x}
-\end{figure*}
-%%%%%%%%%%%%%%%%%%%
-
 \section{2. Methods}
-\subsection{2.1. Theory}
+\noindent\textbf{2.1. Theoretical implementation}
+\\
+\\
+Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikelihood}), its implementation depends on the set of values which each unit can be set on. Since the direct computation of the $Z$ function is unfeasible, due to the summation of on all possible state combinations of the system, a possible approach is to split the summation separately over $v$ and $h$.
 
-Concerning the training process of RBM, $\mathbf{v}$ is setted using real data. Weights $w_{i\mu}$ are initialized sampling values from a Gaussian distribution of mean $0$ and standard deviation $0.01$. Biases $b_\mu$ of hidden units are initialized to $0$. Thus $\mathbf{h}$ is evaluated by Eq.~\ref{eq:p_of_h} before passed to Eq.~\ref{eq:p_of_v} in order to compute back $\mathbf{v}$. In such evaluation it is convenient to set $a_i=\log[p_i/(1-p_i)]$; fixed the $i$-th visible unit, $p_i$ is defined as the number of times such unit is on over the whole training array set, normalized over the size of the set. Referring to Eq.~\ref{eq:p_of_v}, the choice of shifting the sigmoid $\sigma(x)$ by the function $\log[p_i/(1-p_i)]$ of the average $p_i$ ensures that the units can activate properly, even given initial weights $w_{i\mu}$ close to $0$.
+For the Bernulli case the units can assume the values $\{0,1\}$ and the partition function form can be manipulated to obtain the following expression:
+
+\begin{equation}
+	Z=\sum_v\sum_h{e^{-E(v,h)}}=\sum_h{G(h)\prod_{i=1}^D{\left(1+e^{H_i(h)}\right)}}
+	\label{eq:Z_function_bernulli}
+\end{equation}
+
+Concerning the training process of RBM, $\mathbf{v}$ is set using real data. Weights $w_{i\mu}$ are initialized sampling values from a Gaussian distribution of mean $0$ and standard deviation $0.01$. Biases $b_\mu$ of hidden units are initialized to $0$. Thus $\mathbf{h}$ is evaluated by Eq.~\ref{eq:p_of_h} before passed to Eq.~\ref{eq:p_of_v} in order to compute back $\mathbf{v}$. In such evaluation it is convenient to set $a_i=\log[p_i/(1-p_i)]$; fixed the $i$-th visible unit, $p_i$ is defined as the number of times such unit is on over the whole training array set, normalized over the size of the set. Referring to Eq.~\ref{eq:p_of_v}, the choice of shifting the sigmoid $\sigma(x)$ by the function $\log[p_i/(1-p_i)]$ of the average $p_i$ ensures that the units can activate properly, even given initial weights $w_{i\mu}$ close to $0$.
 
 The initialization of biases $a_i$, firstly proposed by Hinton, makes hidden units able to activate and differentiate better their activation based on data, avoiding the risk of getting stuck on values near to $0$.
+\\
+\\
+\\
+\noindent\textbf{2.2. Computation}
+\\
+\\
 
-\subsection{2.2. Computation}
 
-
-
-
-
- Here describe which tools you decided to use for solving the problem, with
- equations
+Here describe which tools you decided to use for solving the problem, with equations
 \begin{equation}
   A=B
   \label{eq:simple}

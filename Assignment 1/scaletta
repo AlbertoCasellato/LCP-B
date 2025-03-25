@@ -1,28 +1,25 @@
 introduction:
-
-- descrizione del progetto;
-- obiettivi del lavoro;
-- topic in generale (RBM);
-  - descrizione RBM;
-- methods (da integrare nel paragrafo successivo);
 - accenno dei prossimi paragrafi
 
 
 methods:
 - come si inizializzano i theta (teorico)
 - Z differente per spin e non spin (teorico)
-- a livello operativo sul codice python (computation)
+
+- le due classi definite
+- metodo di approssimazione sulle loglikelihood
+- caso Z per spin
 - optimazers (computation)
+- parametri scelti e fissati all'inizio
+- cosa abbiamo cambiato di volta in volta
+
 
   
   
   
 TODO LIST:
-- matricole nei nomi?
-- titolo: migliorabile?
 - abstract: da fare alla fine
 - checkare i tempi verbali
-- riparare indici
 
 ___
 SCHEMA:
