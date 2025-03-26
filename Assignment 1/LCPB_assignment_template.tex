@@ -83,7 +83,7 @@ The goodness of the models is evaluated by computing the log-likelihood $\mathca
 	\label{eq:loglikelihood}
 \end{equation}
 
-where $M$ is the number of data points, $Z$ is the partition function, $E(v,h)=G(h)\prod_{i}{e^{H_i(h)v_i}}$ is the energy function, with $G(h)=\prod_{\mu}{e^{b_{\mu}h_{\mu}}}$ and $H_i(h)$ defined as $H_i(h)=a_i+\sum_{\mu}w_{i\mu}h_\mu$, and, in Eq.~\ref{eq:loglikelihood}, the index $h$ of the summation represents each possible state of the hidden layer.
+where $M$ is the number of data points, $Z$ is the partition function, $e^{-E(v,h)}=G(h)\prod_{i}{e^{H_i(h)v_i}}$ is the energy function, with $G(h)=\prod_{\mu}{e^{b_{\mu}h_{\mu}}}$ and $H_i(h)$ defined as $H_i(h)=a_i+\sum_{\mu}w_{i\mu}h_\mu$, and, in Eq.~\ref{eq:loglikelihood}, the index $h$ of the summation represents each possible state of the hidden layer.
 
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
@@ -116,7 +116,16 @@ The initialization of biases $a_i$, firstly proposed by Hinton, makes hidden uni
 \\
 \\
 
-We define two Python3 classes, one for the computation of the log-likelihood and the other for defining the RBM structure and managing all the input and output of the training process. Concerning the log-likelihood evaluation, in order to address the problem of overflow into the power of the expression of the energy function $E(v,h)$ in Eq.~\ref{eq:loglikelihood} we approximate the summation of powers over $h$ as a sum of the biggest ones
+We define two Python3 classes, one for the computation of the log-likelihood and the other for defining the RBM structure and managing all the input and output of the training process. Referring to Eq.~\ref{eq:loglikelihood}, in order to address the problem of overflow of $e^{H_i(h)v_i}$, we approximate the summation of powers over $h$ as a sum of the biggest ones. The purpose of this choice is to extract the biggest term out of the summation.
+
+Regarding the expression of the partition function shown in Eq.~\ref{eq:Z_function_bernulli}, it changes form for Spin case, characterized by units taking values from $\{-1,1\}$. Manipulating the second member of the equation one gets:
+
+\begin{equation}
+	Z=\sum_v\sum_h{e^{-E(v,h)}}=\sum_h{G(h)\prod_{i=1}^D{2\cosh(H_i(h))}}
+	\label{eq:Z_function_spin}
+\end{equation}
+
+For Eq.~\ref{eq:Z_function_spin} the $2\cosh(H_i(h))$ term is approximated to just $e^{H_i(h)}$ by shifting all exponents away from negative values by adding a positive value and properly compensating that out of the summation. Thus the same approximation procedure described for Eq.~\ref{eq:Z_function_bernulli} is applied to Eq.~\ref{eq:Z_function_spin}.
 
 Here describe which tools you decided to use for solving the problem, with equations
 \begin{equation}

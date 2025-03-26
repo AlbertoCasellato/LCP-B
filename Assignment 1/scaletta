@@ -1,19 +1,9 @@
-introduction:
-- accenno dei prossimi paragrafi
-
-
 methods:
-- le due classi definite {V}
-- metodo di approssimazione sulle loglikelihood
-- caso Z per spin
 - optimazers (computation)
 - parametri scelti e fissati all'inizio
 - cosa abbiamo cambiato di volta in volta
 
 
-  
-  
-  
 TODO LIST:
 - abstract: da fare alla fine
 - checkare i tempi verbali
@@ -24,3 +14,9 @@ SCHEMA:
 1 pag - meth
 2/3 pags - results and conclusions
 ___
+
+
+feedback
+- prime 5 righe dell'introduction da mettere alla fine dell'intro, prima dell'accenno su gli altri paragrafi
+- teoria dopo methods
+- comprimere la spiegazione spostandola nella didascalia
