@@ -3,6 +3,8 @@
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage{latexsym,amsmath}
+\usepackage{amsmath}
+\usepackage{unicode-math}
 
 \definecolor{linkcolor}{rgb}{0,0,0.65} %hyperlink
 \usepackage[pdftex,colorlinks=true, pdfstartview=FitV, linkcolor= linkcolor, citecolor= linkcolor, urlcolor= linkcolor, hyperindex=true,hyperfigures=true]{hyperref} %hyperlink%
@@ -21,7 +23,7 @@
 
 \makeatother
 
-
+\numberwithin{equation}{section}
 
 
 
@@ -127,81 +129,17 @@ Regarding the expression of the partition function shown in Eq.~\ref{eq:Z_functi
 
 For Eq.~\ref{eq:Z_function_spin} the $2\cosh(H_i(h))$ term is approximated to just $e^{H_i(h)}$ by shifting all exponents away from negative values by adding a positive value and properly compensating that out of the summation. Thus the same approximation procedure described for Eq.~\ref{eq:Z_function_bernulli} is applied to Eq.~\ref{eq:Z_function_spin}.
 
-Here describe which tools you decided to use for solving the problem, with equations
-\begin{equation}
-  A=B
-  \label{eq:simple}
-\end{equation}
-or systems of equations
-\begin{align}
-  \dot v(t) & =  -U'(x)\nonumber \\
-  \dot x(t) & =  v(t)
-  \label{eq:motion}
-\end{align}
-and  eventually with  pieces of code
-%%%%%%%%%%%%%%%%%%%
-\begin{figure}[h]
-  \includegraphics[width=0.7\columnwidth]{line1.png}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%
-(Jupyter allows saving in latex, it might produce a better output than including a figure with the code as done here).
+To upload the values of the weights and biases during the training phase, we adopted two different gradient descent types: SGD and RMSprop, whose update equations are found in the Appendix (Eq.~\ref{eq:sgd} and Eq.~\ref{eq:rmsprop}). We also make use of the LASSO regularization controlled by the constant $\gamma$ (see Eq.~\ref{eq:regu}).
 
-  As already mentioned, the rest of the text is filled with ``zzz'' to show the typical length of the corresponding sections.
+We define a function to visualize the evolution of the log-likelihood of a specific model throughout the training phase and another function to compute and display the mean log-likelihood and standard deviation over the last few epochs. 
 
+For our analysis, we select the set of digits $\{0,1,2\}$ from the MNIST database. We then evaluate the performance of the RBM, using the visualization functions, comparing different configurations of hyperparameters using pre-trained models. To better highlight the stochasticity of the process, we first run the exact same model five times.  We then specifically examine the influence of variations in the number of Contrastive Divergence steps, in the number of hidden units, in parameters such as the learning rate $\eta$, $\epsilon$ and $\gamma$. Additionally, we analyze the impact of the optimizer choice for models with one hot encoding enabled (POTTS) or disabled and either Bernoulli or Spin variables.
 
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz.
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz.
-
-
-  
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\begin{table}[!b]
-\begin{center}
-\begin{tabular}{lll}
-quantity & symbol & dimensionless \\
-\hline
-time & $t$ & $t'$  \\
-momentum & $p$ & $v$
-\end{tabular}
-\end{center}
-\caption{Description of the table.}
-\label{tab:1}
-\end{table}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-  
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz.
-
-
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz.
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
-  zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz.
- 
 
 
 \section{3. Results}
 
 
-Describe what you found.
-
-Cite Figure~\ref{fig:x}(a), etc. to add information. Later also cite Figure~\ref{fig:y} and  Figure~\ref{fig:z}. Of course the number and size of figures may vary from project to project.
-
-Cite Table~\ref{tab:1} to collect useful data in a clear way.
 
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
@@ -313,8 +251,27 @@ Check if your text is light, swift, and correct in exposing its passages.
 
   
 
+\section{Appendix}
+
+\begin{equation}
+	\boldsymbol{\theta}_{t+1}=\boldsymbol{\theta}_t-\gamma\cdot{\eta_t}\cdot{\mathsf{sign}(\boldsymbol{\theta})}
+	\label{eq:regu}
+\end{equation}
+
+\begin{equation}
+	\boldsymbol{\theta}_{t+1}=\boldsymbol{\theta}_t-\eta_t\nabla_{\boldsymbol{\theta}}{E(\boldsymbol{\theta})}
+\label{eq:sgd}
+\end{equation}
 
 
+\begin{equation}
+	\begin{cases}
+		\boldsymbol{g}_t=\nabla_{\boldsymbol{\theta}}{E(\boldsymbol{\theta})} \\
+		\boldsymbol{s}_t=\beta{\boldsymbol{s}_{t-1}}+(1-\beta)\boldsymbol{g}_t^2 \\
+		\boldsymbol{\theta}_{t+1}=\boldsymbol{\theta}_t-\eta_t\frac{\boldsymbol{g}_t}{\sqrt{\boldsymbol{s}_t+\epsilon}}
+	\end{cases}
+\label{eq:rmsprop}
+\end{equation}
 
 
 \begin{thebibliography}{99}
