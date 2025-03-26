@@ -3,10 +3,7 @@ introduction:
 
 
 methods:
-- come si inizializzano i theta (teorico)
-- Z differente per spin e non spin (teorico)
-
-- le due classi definite
+- le due classi definite {V}
 - metodo di approssimazione sulle loglikelihood
 - caso Z per spin
 - optimazers (computation)

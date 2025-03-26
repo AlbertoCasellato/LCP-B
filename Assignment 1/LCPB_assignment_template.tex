@@ -36,7 +36,7 @@
 \author{Elias Maria Bonasera}
 \author{Alberto Casellato}
 \author{Nicola Garbin}
-\author{Francesco Pazzocco (781238?)}
+\author{Francesco Pazzocco}
 
 \date{\today}
 
@@ -102,11 +102,11 @@ Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikel
 For the Bernulli case the units can assume the values $\{0,1\}$ and the partition function form can be manipulated to obtain the following expression:
 
 \begin{equation}
-	Z=\sum_v\sum_h{e^{-E(v,h)}}=\sum_h{G(h)\prod_{i=1}^D{\left(1+e^{H_i(h)}\right)}}
+	Z=\sum_v\sum_h{e^{-E(v,h)}}=q^D\sum_h{G(h)\prod_{i=1}^D{\frac{1+e^{H_i(h)}}{q}}}
 	\label{eq:Z_function_bernulli}
 \end{equation}
 
-Concerning the training process of RBM, $\mathbf{v}$ is set using real data. Weights $w_{i\mu}$ are initialized sampling values from a Gaussian distribution of mean $0$ and standard deviation $0.01$. Biases $b_\mu$ of hidden units are initialized to $0$. Thus $\mathbf{h}$ is evaluated by Eq.~\ref{eq:p_of_h} before passed to Eq.~\ref{eq:p_of_v} in order to compute back $\mathbf{v}$. In such evaluation it is convenient to set $a_i=\log[p_i/(1-p_i)]$; fixed the $i$-th visible unit, $p_i$ is defined as the number of times such unit is on over the whole training array set, normalized over the size of the set. Referring to Eq.~\ref{eq:p_of_v}, the choice of shifting the sigmoid $\sigma(x)$ by the function $\log[p_i/(1-p_i)]$ of the average $p_i$ ensures that the units can activate properly, even given initial weights $w_{i\mu}$ close to $0$.
+where $q$ is the average of $1+e^{H_i(h)}\ \ \forall{i,h}$ that we introduce to avoid overflow. Concerning the training process of RBM, $\mathbf{v}$ is set using real data. Weights $w_{i\mu}$ are initialized sampling values from a Gaussian distribution of mean $0$ and standard deviation of $2/\sqrt{L+D}$. Biases $b_\mu$ of hidden units are initialized to $0$. Thus $\mathbf{h}$ is evaluated by Eq.~\ref{eq:p_of_h} before passed to Eq.~\ref{eq:p_of_v} in order to compute back $\mathbf{v}$. In such evaluation it is convenient to set $a_i=\log[p_i/(1-p_i)]$; fixed the $i$-th visible unit, $p_i$ is defined as the number of times such unit is on over the whole training array set, normalized over the size of the set. Referring to Eq.~\ref{eq:p_of_v}, the choice of shifting the sigmoid $\sigma(x)$ by the function $\log[p_i/(1-p_i)]$ of the average $p_i$ ensures that the units can activate properly, even given initial weights $w_{i\mu}$ close to $0$.
 
 The initialization of biases $a_i$, firstly proposed by Hinton, makes hidden units able to activate and differentiate better their activation based on data, avoiding the risk of getting stuck on values near to $0$.
 \\
@@ -116,6 +116,7 @@ The initialization of biases $a_i$, firstly proposed by Hinton, makes hidden uni
 \\
 \\
 
+We define two Python3 classes, one for the computation of the log-likelihood and the other for defining the RBM structure and managing all the input and output of the training process. Concerning the log-likelihood evaluation, in order to address the problem of overflow into the power of the expression of the energy function $E(v,h)$ in Eq.~\ref{eq:loglikelihood} we approximate the summation of powers over $h$ as a sum of the biggest ones
 
 Here describe which tools you decided to use for solving the problem, with equations
 \begin{equation}
