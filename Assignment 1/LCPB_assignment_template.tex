@@ -3,8 +3,13 @@
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage{latexsym,amsmath}
-\usepackage{amsmath}
 \usepackage{unicode-math}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\numberwithin{equation}{section}
 
 \definecolor{linkcolor}{rgb}{0,0,0.65} %hyperlink
 \usepackage[pdftex,colorlinks=true, pdfstartview=FitV, linkcolor= linkcolor, citecolor= linkcolor, urlcolor= linkcolor, hyperindex=true,hyperfigures=true]{hyperref} %hyperlink%
@@ -22,8 +27,6 @@
 }
 
 \makeatother
-
-\numberwithin{equation}{section}
 
 
 
@@ -56,8 +59,14 @@
 
 
 \section{1. Introduction}
+%\noindent\textbf{1.1 Boh}
 
 The main goal of this assignment is to explore how the performance of an RBM changes for different choices of the hyperparameters of the model, using the MNIST digits as the database; in particular using the log-likelihood evaluation we explore the trend of the model during the learning process as the number of epochs increases.
+
+zzzzzzzzzzzzzzzz zzzzzzzzz zzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzz zzzzzzzzzzzzzzzz zzzzzzzzz zzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzz zzzzzzzzzzzzzzzz zzzzzzzzz zzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzz zzzzzzzzzzzzzzzz zzzzzzzzz zzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+\section{2. Restricted Boltzmann Machines}
+%\noindent\textbf{1.2 Restricted Boltzmann Machines}
 
 Restricted Boltzmann Machines (RBM) are a powerful kind of generative models designed to accomplish training processes relatively fast. In RBMs, a set of $D$ binary visible units $i$ of state $v_i$ is symmetrically connected to a set of $L$ binary hidden units $\mu$ of state $h_\mu$; the continuos weight $w_{i\mu}$ quantifies the strength between unit $i$ and unit $\mu$ (see Figure~\ref{fig:RBM_architecture}). RBMs use an energy function to define the probability distribution over the input data. In the training process the energy of the configuration is minimized by adjusting the parameters $\theta$. The most common training algorithm is contrastive divergence which allows to approximate the gradient of the likelihood to update the parameters. During this process, a cyclic Gibbs sampling is performed setting the visible units given the hidden ones and vice versa, according to the following probabilities:
 
@@ -133,7 +142,7 @@ To upload the values of the weights and biases during the training phase, we ado
 
 We define a function to visualize the evolution of the log-likelihood of a specific model throughout the training phase and another function to compute and display the mean log-likelihood and standard deviation over the last few epochs. 
 
-For our analysis, we select the set of digits $\{0,1,2\}$ from the MNIST database. We then evaluate the performance of the RBM, using the visualization functions, comparing different configurations of hyperparameters using pre-trained models. To better highlight the stochasticity of the process, we first run the exact same model five times.  We then specifically examine the influence of variations in the number of Contrastive Divergence steps, in the number of hidden units, in parameters such as the learning rate $\eta$, $\epsilon$ and $\gamma$. Additionally, we analyze the impact of the optimizer choice for models with one hot encoding enabled (POTTS) or disabled and either Bernoulli or Spin variables.
+For our analysis, we select the set of digits $\{0,1,2\}$ from the MNIST database. We then evaluate the performance of the RBM by utilizing the visualization functions to compare different configurations of hyperparameters using pre-trained models. To better highlight the stochasticity of the process, we first run the exact same model five times.  We then specifically examine the influence of variations in the number of Contrastive Divergence steps, in the number of hidden units, in parameters such as the learning rate $\eta$, $\epsilon$ and $\gamma$. Additionally, we analyze the impact of the optimizer choice for models with one-hot encoding enabled (POTTS) or disabled and either Bernoulli or Spin variables.
 
 
 
