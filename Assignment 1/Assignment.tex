@@ -48,7 +48,7 @@
 \maketitle
 
 \section{1. Introduction}
-The main goal of this assignment is to explore how the performance of an RBM changes for different choices of the hyperparameters of the model, using the MNIST digits as the database; in particular using the log-likelihood evaluation we explore the trend of the model during the learning process as the number of epochs increases.
+The main goal of this assignment is to explore how the performance of an RBM changes for different choices of the hyperparameters of the model, using the MNIST digits as the database; in particular, using the log-likelihood evaluation, we explore the trend of the model during the learning process as the number of epochs increases.
 
 
 \section{2. Restricted Boltzmann Machines}
@@ -82,8 +82,6 @@ The goodness of a model is evaluated by computing the log-likelihood $\mathcal{L
 	\label{eq:loglikelihood}
 \end{equation}
 
-where $M$ is the number of data points, $Z$ is the partition function, $E(v,h)$ in the exponential argument $e^{-E(v,h)}=G(h)\prod_{i}{e^{H_i(h)v_i}}$ is the energy function, with $G(h)=\prod_{\mu}{e^{b_{\mu}h_{\mu}}}$ and $H_i(h)=a_i+\sum_{\mu}w_{i\mu}h_\mu$, and, in Eq.~\ref{eq:loglikelihood}, the index $h$ of the summation represents each possible state of the hidden layer.
-
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
 	\includegraphics[width=0.44\textwidth]{RBM_structure.png}
@@ -92,28 +90,22 @@ where $M$ is the number of data points, $Z$ is the partition function, $E(v,h)$ 
 \end{figure}
 %%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%
-\begin{figure*}[!tb]
-  \centering
-  \includegraphics[width=0.455\textwidth]{L_of_epochs.jpg}
-  \hskip 1mm
-  \includegraphics[width=0.455\textwidth]{L_of_L.jpg}
-  \vskip 1mm
-  \includegraphics[width=0.455\textwidth]{fig1a.png}
-  \hskip 1mm
-  \includegraphics[width=0.455\textwidth]{fig1a.png}
-  \caption{The figure shows the evolution of the log-likelihood over training epochs for different values of L. The curves represent the average log-likelihood across 10 stochastically distinct runs. 
-  	Figure. Bar chart displaying the weighted mean and standard deviation of the log-likelihood over the last epochs for different values of L. Figure. The figure shows the evolution of the log-likelihood over training epochs for different numbers of CD steps. The curves represent the average log-likelihood across 10 stochastically distinct runs. 
-  	Figure. Bar chart displaying the weighted mean and standard deviation of the log-likelihood over the last epochs for different numbers of CD steps.}
-  \label{fig:x}
-\end{figure*}
-%%%%%%%%%%%%%%%%%%%
+where $M$ is the number of data points, $Z$ is the partition function, $E(v,h)$ in the exponential argument $e^{-E(v,h)}=G(h)\prod_{i}{e^{H_i(h)v_i}}$ is the energy function, with $G(h)=\prod_{\mu}{e^{b_{\mu}h_{\mu}}}$ and $H_i(h)=a_i+\sum_{\mu}w_{i\mu}h_\mu$, and, in Eq.~\ref{eq:loglikelihood}, the index $h$ of the summation represents each possible state of the hidden layer.
+
 
 \section{3. Methods}
 \noindent\textbf{3.1. Theoretical implementation}
 \\
 \\
 Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikelihood}), its implementation depends on the set of values which each unit can be set on. Since the direct computation of the $Z$ function is unfeasible, due to the summation of all possible state combinations of the system, a possible approach is to split the summation separately over states $v$ and $h$.
+
+%%%%%%%%%%%%%%%%%%%
+\begin{figure}[!tb]
+	\includegraphics[width=0.44\textwidth]{L_of_epochs.jpg}
+	\caption{The evolution of the log-likelihood over training epochs for different values of L is shown. The curves represent the average log-likelihood across 10 stochastically distinct runs.}
+	\label{fig:L_of_epochs}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%
 
 For the Bernulli case the units can assume the values $\{0,1\}$ and the partition function form can be manipulated to obtain the following expression:
 
@@ -131,18 +123,26 @@ The initialization of biases $a_i$, firstly proposed by Hinton \cite{pap2}, make
 \noindent\textbf{3.2. Computation}
 \\
 \\
-We define two Python3 classes, one for the computation of the log-likelihood and the other for defining the RBM structure and managing all the input and output of the training process. Referring to Eq.~\ref{eq:loglikelihood}, in order to address the problem of overflow of $e^{H_i(h)v_i}$, we approximate the summation of powers over $h$ as a sum of the biggest ones. The purpose of this choice is to extract the biggest term out of the summation.
+We define two Python3 classes, one for the computation of the log-likelihood and the other for defining the RBM structure and managing all the input and output of the training process. Referring to Eq.~\ref{eq:loglikelihood}, in order to address the problem of overflow of $e^{H_i(h)v_i}$, we approximate the summation of powers over $h$ as a sum of the biggest ones. The purpose of this choice is to extract the biggest term out of the summation thus the applied logarithm avoids exponentiation.
 
-Regarding the expression of the partition function shown in Eq.~\ref{eq:Z_function_bernulli}, it changes form for Spin case, characterized by units taking values from $\{-1,1\}$. Manipulating the second member of the equation one gets:
+Regarding the expression of the partition function shown in Eq.~\ref{eq:Z_function_bernulli}, it changes form in Spin case, since it is characterized by units taking values from $\{-1,1\}$; manipulating the second member of the equation one gets:
+
+%%%%%%%%%%%%%%%%%%%
+\begin{figure}[!tb]
+	\includegraphics[width=0.44\textwidth]{L_of_L.jpg}
+	\caption{Bar chart displaying the weighted mean and standard deviation of the log-likelihood over the last epochs for different values of L.}
+	\label{fig:L_of_L}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%
 
 \begin{equation}
 	Z=\sum_v\sum_h{e^{-E(v,h)}}=\sum_h{G(h)\prod_{i=1}^D{2\cosh(H_i(h))}}
 	\label{eq:Z_function_spin}
 \end{equation}
 
-For Eq.~\ref{eq:Z_function_spin} the $2\cosh(H_i(h))$ term is approximated to just $e^{H_i(h)}$ by shifting all exponents away from negative values after adding a positive value and properly compensating that out of the summation. Thus the same approximation procedure described for Eq.~\ref{eq:Z_function_bernulli} is applied to Eq.~\ref{eq:Z_function_spin}.
+For Eq.~\ref{eq:Z_function_spin} the $2\cosh(H_i(h))$ term is approximated to just $e^{H_i(h)}$ by adding a common positive value to all the exponents, which shifts them away from negative domain, and compensating that out of the summation. Thus the same approximation procedure described for Eq.~\ref{eq:loglikelihood} is applied to Eq.~\ref{eq:Z_function_spin}.
 
-To upload the values of the weights and biases during the training phase, we adopted two different gradient descent types: SGD and RMSprop, whose update equations are found in the Appendix (Eq.~\ref{eq:sgd} and Eq.~\ref{eq:rmsprop}). We also make use of the LASSO regularization controlled by the constant $\gamma$ (see Eq.~\ref{eq:regu}).
+To upload the values of the weights and biases during the training phase, we adopted two different gradient descent types: SGD and RMSprop, whose update equations are found in the Appendix (Eq.~\ref{eq:sgd} and Eq.~\ref{eq:rmsprop}). We also make use of the LASSO regularization (?) controlled by the constant $\gamma$ (see Eq.~\ref{eq:regu}).
 
 We define a function to visualize the evolution of the log-likelihood of a specific model throughout the training phase and another function to compute and display the mean log-likelihood and standard deviation over the last few epochs. 
 
