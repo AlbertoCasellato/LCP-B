@@ -80,7 +80,7 @@ Restricted Boltzmann Machines (RBM) are a powerful kind of generative models des
 	\label{eq:p_of_v}
 \end{equation}
 
-where $\sigma(x)=1/(1+e^{-x})$ is the logistic sigmoid function, $a_i$ is the bias of the $i$-th visible unit and $b_\mu$ is the bias of the $\mu$-th hidden unit; they act shifting the sigmoid function $\sigma(x)$. The absence of links among units of the same type simplifies the training process. Moreover, the number of iterations of Eq.~\ref{eq:p_of_h} and Eq.~\ref{eq:p_of_v} can be setted to $1$ if real data is used to fix $\mathbf{v}$ in the first place.
+where $\sigma(x)=1/(1+e^{-x})$ is the logistic sigmoid function, $a_i$ is the bias of the $i$-th visible unit and $b_\mu$ is the bias of the $\mu$-th hidden unit; they act shifting the sigmoid function $\sigma(x)$. The absence of links among units of the same type simplifies the training process. Moreover, the number of iterations of Eq.~\ref{eq:p_of_h} and Eq.~\ref{eq:p_of_v} can be setted to $2$ if real data is used to fix $\{v_i\}_{i=1, ..., D}$ in the first place.
 
 The goodness of a model is evaluated by computing the log-likelihood $\mathcal{L}$ of the data:
 
@@ -98,7 +98,7 @@ where $M$ is the number of data points, $Z$ is the partition function, $E(v,h)$ 
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
 	\includegraphics[width=0.44\textwidth]{RBM_structure.png}
-	\caption{A Restricted Boltzmann Machine (RBM) is made up of visible units, denoted as $v_i$, and hidden units, represented as $h_\mu$. These units engage with one another through interactions characterized by the weights $W_{i\mu}$. Notably, there are no direct interactions among the visible units or among the hidden units themselves.}
+	\caption{A Restricted Boltzmann Machine (RBM) is made up of visible units, denoted as $v_i$, and hidden units, represented as $h_\mu$. These units engage with one another through interactions characterized by the weights $w_{i\mu}$. Notably, there are no direct interactions among the visible units or among the hidden units themselves.}
 	\label{fig:RBM_architecture}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%
@@ -107,8 +107,6 @@ where $M$ is the number of data points, $Z$ is the partition function, $E(v,h)$ 
 \noindent\textbf{3.1. Theoretical implementation}
 \\
 \\
-\setcounter{equation}{0}
-
 Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikelihood}), its implementation depends on the set of values which each unit can be set on. Since the direct computation of the $Z$ function is unfeasible, due to the summation of all possible state combinations of the system, a possible approach is to split the summation separately over $v$ and $h$.
 
 For the Bernulli case the units can assume the values $\{0,1\}$ and the partition function form can be manipulated to obtain the following expression:
@@ -127,8 +125,6 @@ The initialization of biases $a_i$, firstly proposed by Hinton, makes hidden uni
 \noindent\textbf{3.2. Computation}
 \\
 \\
-\setcounter{equation}{0}
-
 We define two Python3 classes, one for the computation of the log-likelihood and the other for defining the RBM structure and managing all the input and output of the training process. Referring to Eq.~\ref{eq:loglikelihood}, in order to address the problem of overflow of $e^{H_i(h)v_i}$, we approximate the summation of powers over $h$ as a sum of the biggest ones. The purpose of this choice is to extract the biggest term out of the summation.
 
 Regarding the expression of the partition function shown in Eq.~\ref{eq:Z_function_bernulli}, it changes form for Spin case, characterized by units taking values from $\{-1,1\}$. Manipulating the second member of the equation one gets:
