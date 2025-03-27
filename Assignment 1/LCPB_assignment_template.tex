@@ -9,7 +9,6 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 
-\numberwithin{equation}{section}
 
 \definecolor{linkcolor}{rgb}{0,0,0.65} %hyperlink
 \usepackage[pdftex,colorlinks=true, pdfstartview=FitV, linkcolor= linkcolor, citecolor= linkcolor, urlcolor= linkcolor, hyperindex=true,hyperfigures=true]{hyperref} %hyperlink%
@@ -61,14 +60,16 @@
 \section{1. Introduction}
 %\noindent\textbf{1.1 Boh}
 
-The main goal of this assignment is to explore how the performance of an RBM changes for different choices of the hyperparameters of the model, using the MNIST digits as the database; in particular using the log-likelihood evaluation we explore the trend of the model during the learning process as the number of epochs increases.
+\setcounter{equation}{0}
 
-zzzzzzzzzzzzzzzz zzzzzzzzz zzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzz zzzzzzzzzzzzzzzz zzzzzzzzz zzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzz zzzzzzzzzzzzzzzz zzzzzzzzz zzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzz zzzzzzzzzzzzzzzz zzzzzzzzz zzzzzzzzzzzzzzzzzzzzzz zzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+The main goal of this assignment is to explore how the performance of an RBM changes for different choices of the hyperparameters of the model, using the MNIST digits as the database; in particular using the log-likelihood evaluation we explore the trend of the model during the learning process as the number of epochs increases.
 
 \section{2. Restricted Boltzmann Machines}
 %\noindent\textbf{1.2 Restricted Boltzmann Machines}
 
-Restricted Boltzmann Machines (RBM) are a powerful kind of generative models designed to accomplish training processes relatively fast. In RBMs, a set of $D$ binary visible units $i$ of state $v_i$ is symmetrically connected to a set of $L$ binary hidden units $\mu$ of state $h_\mu$; the continuos weight $w_{i\mu}$ quantifies the strength between unit $i$ and unit $\mu$ (see Figure~\ref{fig:RBM_architecture}). RBMs use an energy function to define the probability distribution over the input data. In the training process the energy of the configuration is minimized by adjusting the parameters $\theta$. The most common training algorithm is contrastive divergence which allows to approximate the gradient of the likelihood to update the parameters. During this process, a cyclic Gibbs sampling is performed setting the visible units given the hidden ones and vice versa, according to the following probabilities:
+\setcounter{equation}{0}
+
+Restricted Boltzmann Machines (RBM) are a powerful kind of generative models designed to accomplish training processes relatively fast. In RBMs, a set of $D$ binary visible units $i$ of state $\{v_i\}_{i=1, ..., D}$ is symmetrically connected to a set of $L$ binary hidden units $\mu$ of state $\{h_\mu\}_{\mu=1, ..., L}$; the continuos weight $w_{i\mu}$ quantifies the strength between unit $i$ and unit $\mu$ (see Figure~\ref{fig:RBM_architecture}). RBMs use an energy function to define the probability distribution over the input data. In the training process the energy of the configuration is minimized by adjusting the parameters $\boldsymbol{\theta}$. One of the most adopted training algorithm is contrastive divergence which allows to approximate the gradient of the likelihood to update the parameters. During this process, a cyclic Gibbs sampling is performed setting the visible units given the hidden ones and vice versa, according to the following probabilities $p$:
 
 \begin{equation}
 	p(h_\mu=1\ |\ \mathbf{v}) = \sigma(b_\mu + \sum_{i}v_iw_{i\mu})
@@ -80,21 +81,19 @@ Restricted Boltzmann Machines (RBM) are a powerful kind of generative models des
 \end{equation}
 
 where $\sigma(x)=1/(1+e^{-x})$ is the logistic sigmoid function, $a_i$ is the bias of the $i$-th visible unit and $b_\mu$ is the bias of the $\mu$-th hidden unit; they act shifting the sigmoid function $\sigma(x)$. The absence of links among units of the same type simplifies the training process. Moreover, the number of iterations of Eq.~\ref{eq:p_of_h} and Eq.~\ref{eq:p_of_v} can be setted to $1$ if real data is used to fix $\mathbf{v}$ in the first place.
-\\
-\\
-\\
-The goodness of the models is evaluated by computing the log-likelihood $\mathcal{L}$ of the data:
+
+The goodness of a model is evaluated by computing the log-likelihood $\mathcal{L}$ of the data:
 
 \begin{equation}
-	\mathcal{L}=\frac{1}{M}\sum_{m=1}^{M}{\mathfrak{l}_{\theta}(v^{(m)})}
+	\mathcal{L}=\frac{1}{M}\sum_{m=1}^{M}{\ell_{\theta}(v^{(m)})}
 	\label{eq:Loglikelihood}
 \end{equation}
 \begin{equation}
-	\mathfrak{l}_{\theta}(v^{(m)})=\log\sum_{h}{e^{-E(v,h)}-\log{Z}}
+	\ell_{\theta}(v^{(m)})=\log\sum_{h}{e^{-E(v,h)}-\log{Z}}
 	\label{eq:loglikelihood}
 \end{equation}
 
-where $M$ is the number of data points, $Z$ is the partition function, $e^{-E(v,h)}=G(h)\prod_{i}{e^{H_i(h)v_i}}$ is the energy function, with $G(h)=\prod_{\mu}{e^{b_{\mu}h_{\mu}}}$ and $H_i(h)$ defined as $H_i(h)=a_i+\sum_{\mu}w_{i\mu}h_\mu$, and, in Eq.~\ref{eq:loglikelihood}, the index $h$ of the summation represents each possible state of the hidden layer.
+where $M$ is the number of data points, $Z$ is the partition function, $E(v,h)$ in the exponential argument $e^{-E(v,h)}=G(h)\prod_{i}{e^{H_i(h)v_i}}$ is the energy function, with $G(h)=\prod_{\mu}{e^{b_{\mu}h_{\mu}}}$ and $H_i(h)=a_i+\sum_{\mu}w_{i\mu}h_\mu$, and, in Eq.~\ref{eq:loglikelihood}, the index $h$ of the summation represents each possible state of the hidden layer.
 
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
@@ -104,11 +103,13 @@ where $M$ is the number of data points, $Z$ is the partition function, $e^{-E(v,
 \end{figure}
 %%%%%%%%%%%%%%%%%%%
 
-\section{2. Methods}
-\noindent\textbf{2.1. Theoretical implementation}
+\section{3. Methods}
+\noindent\textbf{3.1. Theoretical implementation}
 \\
 \\
-Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikelihood}), its implementation depends on the set of values which each unit can be set on. Since the direct computation of the $Z$ function is unfeasible, due to the summation of on all possible state combinations of the system, a possible approach is to split the summation separately over $v$ and $h$.
+\setcounter{equation}{0}
+
+Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikelihood}), its implementation depends on the set of values which each unit can be set on. Since the direct computation of the $Z$ function is unfeasible, due to the summation of all possible state combinations of the system, a possible approach is to split the summation separately over $v$ and $h$.
 
 For the Bernulli case the units can assume the values $\{0,1\}$ and the partition function form can be manipulated to obtain the following expression:
 
@@ -123,9 +124,10 @@ The initialization of biases $a_i$, firstly proposed by Hinton, makes hidden uni
 \\
 \\
 \\
-\noindent\textbf{2.2. Computation}
+\noindent\textbf{3.2. Computation}
 \\
 \\
+\setcounter{equation}{0}
 
 We define two Python3 classes, one for the computation of the log-likelihood and the other for defining the RBM structure and managing all the input and output of the training process. Referring to Eq.~\ref{eq:loglikelihood}, in order to address the problem of overflow of $e^{H_i(h)v_i}$, we approximate the summation of powers over $h$ as a sum of the biggest ones. The purpose of this choice is to extract the biggest term out of the summation.
 
@@ -136,7 +138,7 @@ Regarding the expression of the partition function shown in Eq.~\ref{eq:Z_functi
 	\label{eq:Z_function_spin}
 \end{equation}
 
-For Eq.~\ref{eq:Z_function_spin} the $2\cosh(H_i(h))$ term is approximated to just $e^{H_i(h)}$ by shifting all exponents away from negative values by adding a positive value and properly compensating that out of the summation. Thus the same approximation procedure described for Eq.~\ref{eq:Z_function_bernulli} is applied to Eq.~\ref{eq:Z_function_spin}.
+For Eq.~\ref{eq:Z_function_spin} the $2\cosh(H_i(h))$ term is approximated to just $e^{H_i(h)}$ by shifting all exponents away from negative values after adding a positive value and properly compensating that out of the summation. Thus the same approximation procedure described for Eq.~\ref{eq:Z_function_bernulli} is applied to Eq.~\ref{eq:Z_function_spin}.
 
 To upload the values of the weights and biases during the training phase, we adopted two different gradient descent types: SGD and RMSprop, whose update equations are found in the Appendix (Eq.~\ref{eq:sgd} and Eq.~\ref{eq:rmsprop}). We also make use of the LASSO regularization controlled by the constant $\gamma$ (see Eq.~\ref{eq:regu}).
 
@@ -146,9 +148,9 @@ For our analysis, we select the set of digits $\{0,1,2\}$ from the MNIST databas
 
 
 
-\section{3. Results}
+\section{4. Results}
 
-
+\setcounter{equation}{0}
 
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
@@ -180,9 +182,6 @@ For our analysis, we select the set of digits $\{0,1,2\}$ from the MNIST databas
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz.
-
-  
-
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
@@ -224,7 +223,9 @@ For our analysis, we select the set of digits $\{0,1,2\}$ from the MNIST databas
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz.
 
-\section{4. Conclusions}
+\section{5. Conclusions}
+
+\setcounter{equation}{0}
 
 Discuss the key aspects that we can take home from this work.
 
