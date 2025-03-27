@@ -56,7 +56,9 @@ The main goal of this assignment is to explore how the performance of an RBM cha
 
 \setcounter{equation}{0}
 
-Restricted Boltzmann Machines (RBM) are a powerful kind of generative models designed to accomplish training processes relatively fast. In RBMs, a set of $D$ binary visible units $i$ of state $\{v_i\}_{i=1, ..., D}$ is symmetrically connected to a set of $L$ binary hidden units $\mu$ of state $\{h_\mu\}_{\mu=1, ..., L}$; the continuos weight $w_{i\mu}$ quantifies the strength between unit $i$ and unit $\mu$ (see Figure~\ref{fig:RBM_architecture}). RBMs use an energy function to define the probability distribution over the input data. In the training process the energy of the configuration is minimized by adjusting the parameters $\boldsymbol{\theta}$. One of the most adopted training algorithm is contrastive divergence which allows to approximate the gradient of the likelihood to update the parameters. During this process, a cyclic Gibbs sampling is performed setting the visible units given the hidden ones and vice versa, according to the following probabilities $p$:
+Restricted Boltzmann Machines (RBM) are a powerful kind of generative models designed to accomplish training processes relatively fast. In RBMs, a set of $D$ binary visible units $i$ of state $\{v_i\}_{i=1, ..., D}$ is symmetrically connected to a set of $L$ binary hidden units $\mu$ of state $\{h_\mu\}_{\mu=1, ..., L}$; the continuos weight $w_{i\mu}$ quantifies the strength between unit $i$ and unit $\mu$ (see Figure~\ref{fig:RBM_architecture}). RBMs use an energy function to define the probability distribution over the input data \cite{pap1} \cite{pap2}.
+
+In the training process the energy of the configuration is minimized by adjusting the parameters $\boldsymbol{\theta}$. One of the most adopted training algorithm is Contrastive Divergence which allows to approximate the gradient of the likelihood to update the parameters. During this process, a cyclic Gibbs sampling is performed setting the visible units given the hidden ones and vice versa, according to the following probabilities $p$:
 
 \begin{equation}
 	p(h_\mu=1\ |\ \mathbf{v}) = \sigma(b_\mu + \sum_{i}v_iw_{i\mu})
@@ -100,7 +102,9 @@ where $M$ is the number of data points, $Z$ is the partition function, $E(v,h)$ 
   \includegraphics[width=0.455\textwidth]{fig1a.png}
   \hskip 1mm
   \includegraphics[width=0.455\textwidth]{fig1a.png}
-  \caption{Description of the panels: (a)..... (b)... etc. This caption should give enough info on the content of figures to make them mostly readable without consulting the main text. However, repetitions with the main text should e avoided if possible. {\color{red} If this format is difficult to frame in the page you want, just break it into multiple single figures.}}
+  \caption{The figure shows the evolution of the log-likelihood over training epochs for different values of L. The curves represent the average log-likelihood across 10 stochastically distinct runs. 
+  	Figure. Bar chart displaying the weighted mean and standard deviation of the log-likelihood over the last epochs for different values of L. Figure. The figure shows the evolution of the log-likelihood over training epochs for different numbers of CD steps. The curves represent the average log-likelihood across 10 stochastically distinct runs. 
+  	Figure. Bar chart displaying the weighted mean and standard deviation of the log-likelihood over the last epochs for different numbers of CD steps.}
   \label{fig:x}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%
@@ -109,7 +113,7 @@ where $M$ is the number of data points, $Z$ is the partition function, $E(v,h)$ 
 \noindent\textbf{3.1. Theoretical implementation}
 \\
 \\
-Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikelihood}), its implementation depends on the set of values which each unit can be set on. Since the direct computation of the $Z$ function is unfeasible, due to the summation of all possible state combinations of the system, a possible approach is to split the summation separately over $v$ and $h$.
+Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikelihood}), its implementation depends on the set of values which each unit can be set on. Since the direct computation of the $Z$ function is unfeasible, due to the summation of all possible state combinations of the system, a possible approach is to split the summation separately over states $v$ and $h$.
 
 For the Bernulli case the units can assume the values $\{0,1\}$ and the partition function form can be manipulated to obtain the following expression:
 
@@ -118,9 +122,9 @@ For the Bernulli case the units can assume the values $\{0,1\}$ and the partitio
 	\label{eq:Z_function_bernulli}
 \end{equation}
 
-where $q$ is the average of $1+e^{H_i(h)}\ \ \forall{i,h}$ that we introduce to avoid overflow. Concerning the training process of RBM, $\mathbf{v}$ is set using real data. Weights $w_{i\mu}$ are initialized sampling values from a Gaussian distribution of mean $0$ and standard deviation of $2/\sqrt{L+D}$. Biases $b_\mu$ of hidden units are initialized to $0$. Thus $\mathbf{h}$ is evaluated by Eq.~\ref{eq:p_of_h} before passed to Eq.~\ref{eq:p_of_v} in order to compute back $\mathbf{v}$. In such evaluation it is convenient to set $a_i=\log[p_i/(1-p_i)]$; fixed the $i$-th visible unit, $p_i$ is defined as the number of times such unit is on over the whole training array set, normalized over the size of the set. Referring to Eq.~\ref{eq:p_of_v}, the choice of shifting the sigmoid $\sigma(x)$ by the function $\log[p_i/(1-p_i)]$ of the average $p_i$ ensures that the units can activate properly, even given initial weights $w_{i\mu}$ close to $0$.
+where $q$ is the average of $1+e^{H_i(h)}\ \ \forall{i,h}$ that we introduce to avoid overflow. Concerning the training process of RBM, $v_i$ are set using real data. Weights $w_{i\mu}$ are initialized sampling values from a Gaussian distribution of mean $0$ and standard deviation of $2/\sqrt{L+D}$. Biases $b_\mu$ of hidden units are initialized to $0$. Thus $h_\mu$ are evaluated by Eq.~\ref{eq:p_of_h} before passed to Eq.~\ref{eq:p_of_v} in order to compute back $v_i$. In such evaluation it is convenient to set $a_i=\log[t_i/(1-t_i)]$; fixed the $i$-th visible unit, $t_i$ is defined as the number of times such unit is $1$ over the whole training array set, normalized over the size of the set. Referring to Eq.~\ref{eq:p_of_v}, the choice of shifting the sigmoid $\sigma(x)$ by the function $\log[t_i/(1-t_i)]$ of the average $t_i$ ensures that the units can activate properly, even given initial weights $w_{i\mu}$ close to $0$.
 
-The initialization of biases $a_i$, firstly proposed by Hinton, makes hidden units able to activate and differentiate better their activation based on data, avoiding the risk of getting stuck on values near to $0$.
+The initialization of biases $a_i$, firstly proposed by Hinton \cite{pap2}, makes hidden units able to activate and differentiate better their activation based on data, avoiding the risk of getting stuck on values near to $0$.
 \\
 \\
 \\
@@ -270,14 +274,14 @@ Check if your text is light, swift, and correct in exposing its passages.
 	Clint Richardson,
 	Charles K. Fisher,
 	David J. Schwab,
-	A high-bias, low-variance introduction to Machine Learning
-	for physicists
+	\textit{A high-bias, low-variance introduction to Machine Learning for physicists},
 	Physics Reports {\bf 810}, 1--124 (2019).
   
 \bibitem{pap2}
-  A. Einstein,
-  Int. J. There Here {\bf 20}, 125--133 (1910).
-  
+	Geoffrey E. Hinton,
+	\textit{A Practical Guide to Training Restricted Boltzmann Machines},
+	Neural Networks: Tricks of the Trade: Second Edition, 599--619 (2012).
+
 \end{thebibliography}
 
 \clearpage
