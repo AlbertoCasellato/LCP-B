@@ -19,3 +19,13 @@ feedback
 - prime 5 righe dell'introduction da mettere alla fine dell'intro, prima dell'accenno su gli altri paragrafi
 - teoria dopo methods
 - comprimere la spiegazione spostandola nella didascalia
+
+___
+
+scelta:
+- gamma (grafico)
+- lr (grafico)
+- optimizers (testo)
+- spin (testo)
+- potts con sgd (grafico)
+- potts con rmsprop (grafico)

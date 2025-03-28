@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2025.3.21)  27 MAR 2025 17:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2025.3.21)  28 MAR 2025 14:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -449,173 +449,187 @@ File: L_of_epochs.jpg Graphic file (type jpg)
 <use L_of_epochs.jpg>
 Package pdftex.def Info: L_of_epochs.jpg  used on input line 104.
 (pdftex.def)             Requested size: 224.40125pt x 140.60277pt.
+<L_of_CD.png, id=50, 634.2897pt x 397.485pt>
+File: L_of_CD.png Graphic file (type png)
+<use L_of_CD.png>
+Package pdftex.def Info: L_of_CD.png  used on input line 112.
+(pdftex.def)             Requested size: 224.40125pt x 140.61992pt.
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./RBM_structure.png>]
 
 LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix]
- on input line 111.
+ on input line 119.
 
 
-Underfull \hbox (badness 1838) in paragraph at lines 119--127
+Underfull \hbox (badness 1838) in paragraph at lines 127--135
 \OT1/cmr/m/n/10 dif-fer-en-ti-ate bet-ter their ac-ti-va-tion based on data,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 119--127
+Underfull \hbox (badness 10000) in paragraph at lines 127--135
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 119--127
+Underfull \hbox (badness 10000) in paragraph at lines 127--135
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 119--127
+Underfull \hbox (badness 10000) in paragraph at lines 127--135
 
  []
 
-<L_of_L.jpg, id=82, 308.352pt x 193.2018pt>
+<L_of_L.jpg, id=83, 308.352pt x 193.2018pt>
 File: L_of_L.jpg Graphic file (type jpg)
 <use L_of_L.jpg>
-Package pdftex.def Info: L_of_L.jpg  used on input line 132.
+Package pdftex.def Info: L_of_L.jpg  used on input line 140.
 (pdftex.def)             Requested size: 224.40125pt x 140.60277pt.
-[2 <./L_of_epochs.jpg> <./L_of_L.jpg>]
+<final_L_of_CD.png, id=84, 655.0071pt x 397.9668pt>
+File: final_L_of_CD.png Graphic file (type png)
+<use final_L_of_CD.png>
+Package pdftex.def Info: final_L_of_CD.png  used on input line 148.
+(pdftex.def)             Requested size: 224.40125pt x 136.33923pt.
+[2 <./L_of_epochs.jpg> <./L_of_CD.png> <./L_of_L.jpg> <./final_L_of_CD.png>]
 
-LaTeX Warning: Reference `fig:x' on page 3 undefined on input line 159.
+LaTeX Warning: Reference `fig:x' on page 3 undefined on input line 175.
 
 
-LaTeX Warning: Reference `tab:1' on page 3 undefined on input line 161.
+LaTeX Warning: Reference `tab:1' on page 3 undefined on input line 177.
 
 
-Underfull \hbox (badness 4353) in paragraph at lines 163--168
+Underfull \hbox (badness 4353) in paragraph at lines 179--184
 \OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz zzzzzzzzzzzzzzz zzzzz
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 163--168
+Underfull \hbox (badness 10000) in paragraph at lines 179--184
 \OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
  []
 
 
-Underfull \hbox (badness 4353) in paragraph at lines 169--179
+Underfull \hbox (badness 4353) in paragraph at lines 185--195
 \OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz zzzzzzzzzzzzzzz zzzzz
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 169--179
+Underfull \hbox (badness 10000) in paragraph at lines 185--195
 \OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
  []
 
 
-Underfull \hbox (badness 1033) in paragraph at lines 169--179
+Underfull \hbox (badness 1033) in paragraph at lines 185--195
 \OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz. zzzzzzzzzzzzzzz zzzzz
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 169--179
+Underfull \hbox (badness 10000) in paragraph at lines 185--195
 \OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
  []
 
 
-Underfull \hbox (badness 4353) in paragraph at lines 169--179
+Underfull \hbox (badness 4353) in paragraph at lines 185--195
 \OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz zzzzzzzzzzzzzzz zzzzz
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 169--179
+Underfull \hbox (badness 10000) in paragraph at lines 185--195
 \OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
  []
 
-<fig1a.png, id=103, 371.88937pt x 238.8925pt>
+<fig1a.png, id=105, 371.88937pt x 238.8925pt>
 File: fig1a.png Graphic file (type png)
 <use fig1a.png>
-Package pdftex.def Info: fig1a.png  used on input line 182.
+Package pdftex.def Info: fig1a.png  used on input line 198.
 (pdftex.def)             Requested size: 224.40125pt x 144.15312pt.
 
-Underfull \hbox (badness 4353) in paragraph at lines 188--193
+Underfull \hbox (badness 4353) in paragraph at lines 204--209
 \OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz zzzzzzzzzzzzzzz zzzzz
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 188--193
+Underfull \hbox (badness 10000) in paragraph at lines 204--209
 \OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
  []
 
 
-Underfull \hbox (badness 4353) in paragraph at lines 196--201
+Underfull \hbox (badness 4353) in paragraph at lines 212--217
 \OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz zzzzzzzzzzzzzzz zzzzz
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 196--201
+Underfull \hbox (badness 10000) in paragraph at lines 212--217
 \OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
  []
 
 File: fig1a.png Graphic file (type png)
 <use fig1a.png>
-Package pdftex.def Info: fig1a.png  used on input line 204.
+Package pdftex.def Info: fig1a.png  used on input line 220.
 (pdftex.def)             Requested size: 224.40125pt x 144.15312pt.
 
-Underfull \hbox (badness 4353) in paragraph at lines 211--221
+Underfull \hbox (badness 4353) in paragraph at lines 227--237
 \OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz zzzzzzzzzzzzzzz zzzzz
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 211--221
+Underfull \hbox (badness 10000) in paragraph at lines 227--237
 \OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
  []
 
 
-Underfull \hbox (badness 1033) in paragraph at lines 211--221
+Underfull \hbox (badness 1033) in paragraph at lines 227--237
 \OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz. zzzzzzzzzzzzzzz zzzzz
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 211--221
+Underfull \hbox (badness 10000) in paragraph at lines 227--237
 \OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
  []
 
 
-Underfull \hbox (badness 4353) in paragraph at lines 211--221
+Underfull \hbox (badness 4353) in paragraph at lines 227--237
 \OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz zzzzzzzzzzzzzzz zzzzz
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 211--221
-\OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
- []
-
-
-Underfull \hbox (badness 4353) in paragraph at lines 222--227
-\OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz zzzzzzzzzzzzzzz zzzzz
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 222--227
-\OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
- []
-
-
-Underfull \hbox (badness 4353) in paragraph at lines 231--236
-\OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz zzzzzzzzzzzzzzz zzzzz
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 231--236
+Underfull \hbox (badness 10000) in paragraph at lines 227--237
 \OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
  []
 
 [3 <./fig1a.png (PNG copy)>]
+
+LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix]
+ on input line 237.
+
+
+Underfull \hbox (badness 4353) in paragraph at lines 238--243
+\OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz zzzzzzzzzzzzzzz zzzzz
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 238--243
+\OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
+ []
+
+
+Underfull \hbox (badness 4353) in paragraph at lines 247--252
+\OT1/cmr/m/n/10 z zzzzzzzzzzz zzzz zzzzzzzzz zzzzzzzzzzzzzzz zzzzz
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--252
+\OT1/cmr/m/n/10 zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
+ []
+
 No file Assignment.bbl.
 [4]
 
 pdfTeX warning: /usr/bin/pdflatex (file ./description_assignment_LCPB_20-21.pdf
 ): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
-<description_assignment_LCPB_20-21.pdf, id=119, 796.4211pt x 597.6786pt>
+<description_assignment_LCPB_20-21.pdf, id=125, 796.4211pt x 597.6786pt>
 File: description_assignment_LCPB_20-21.pdf Graphic file (type pdf)
 <use description_assignment_LCPB_20-21.pdf>
 Package pdftex.def Info: description_assignment_LCPB_20-21.pdf  used on input l
-ine 292.
+ine 308.
 (pdftex.def)             Requested size: 510.0pt x 382.73187pt.
 [5 <./description_assignment_LCPB_20-21.pdf>] (./Assignment.aux)
 
@@ -625,10 +639,10 @@ Package rerunfilecheck Info: File `Assignment.out' has not changed.
 (rerunfilecheck)             Checksum: 3F8053220B69749299862D74F9F85BA9;1401.
  ) 
 Here is how much of TeX's memory you used:
- 10967 strings out of 476091
- 168376 string characters out of 5794081
+ 10984 strings out of 476091
+ 168672 string characters out of 5794081
  1875330 words of memory out of 5000000
- 31175 multiletter control sequences out of 15000+600000
+ 31188 multiletter control sequences out of 15000+600000
  520884 words of font info for 65 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,13n,76p,980b,516s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -649,10 +663,10 @@ hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/public/amsfonts/cm/cmti9.pfb>
-Output written on Assignment.pdf (5 pages, 493045 bytes).
+Output written on Assignment.pdf (5 pages, 817346 bytes).
 PDF statistics:
- 224 PDF objects out of 1000 (max. 8388607)
- 166 compressed objects within 2 object streams
- 30 named destinations out of 1000 (max. 500000)
- 98 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 231 PDF objects out of 1000 (max. 8388607)
+ 169 compressed objects within 2 object streams
+ 32 named destinations out of 1000 (max. 500000)
+ 108 words of extra memory for PDF output out of 10000 (max. 10000000)
 
