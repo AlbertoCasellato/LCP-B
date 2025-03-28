@@ -50,13 +50,23 @@
 \section{1. Introduction}
 The main goal of this assignment is to explore how the performance of an RBM changes for different choices of the hyperparameters of the model, using the MNIST digits as the database; in particular, using the log-likelihood evaluation, we explore the trend of the model during the learning process as the number of epochs increases.
 
+In section \emph{2.} it is exposed a brief insight of the Restricted Boltzmann Machines architecture. The log-likelihood is introduced in this section as it is adopted both to estimate the performance of the model and as an evaluation of $\nabla_{\boldsymbol{\theta}}{E(\boldsymbol{\theta})}$ in optimizers (see Eq.~\ref{eq:sgd} and Eq.~\ref{eq:rmsprop}). Subsection \emph{3.1.} is opened with the explicit expression for the partition function $Z$ in the Bernoulli case (Eq.~\ref{eq:Z_function_bernulli}) and then it regards theoretical insight about setting parameters of the model. In subsection \emph{3.2.} operative choices regarding simulations are discussed, including numerical methods adopted to prevent computation errors. The explicit expression for the partition function $Z$ in the Spin case (Eq.~\ref{eq:Z_function_spin}) is introduced in this subsection, since it is approximated in a similar way compared to the Bernoulli case. In section \emph{4.} results concerning the log-likelihood are discussed, dependent on number $L$ of hidden units (Figure~\ref{fig:L_of_L}), CD steps number (Figure~\ref{fig:final_L_of_CD}), $\gamma$ parameter (..), learning rate (..), optimizers choice (..), Bernoulli vs Spin case (..), POTTS on/off for SGD optimizer (..) and POTTS on/off for RMSprop optimizer (..).
 
-\section{2. Restricted Boltzmann Machines}
+
+\section{2. Restricted Boltzmann Machines} \label{RBM}
 %\noindent\textbf{1.2 Restricted Boltzmann Machines}
 
 \setcounter{equation}{0}
 
 Restricted Boltzmann Machines (RBM) are a powerful kind of generative models designed to accomplish training processes relatively fast. In RBMs, a set of $D$ binary visible units $i$ of state $\{v_i\}_{i=1, ..., D}$ is symmetrically connected to a set of $L$ binary hidden units $\mu$ of state $\{h_\mu\}_{\mu=1, ..., L}$; the continuos weight $w_{i\mu}$ quantifies the strength between unit $i$ and unit $\mu$ (see Figure~\ref{fig:RBM_architecture}). RBMs use an energy function to define the probability distribution over the input data \cite{pap1} \cite{pap2}.
+
+%%%%%%%%%%%%%%%%%%%
+\begin{figure}[!tb]
+	\includegraphics[width=0.465\textwidth]{RBM_structure.png}
+	\caption{A Restricted Boltzmann Machine (RBM) is made up of visible units, denoted as $v_i$, and hidden units, represented as $h_\mu$. These units engage with one another through interactions characterized by the weights $w_{i\mu}$. Notably, there are no direct interactions among the visible units or among the hidden units themselves.}
+	\label{fig:RBM_architecture}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%
 
 In the training process the energy of the configuration is minimized by adjusting the parameters $\boldsymbol{\theta}$. One of the most adopted training algorithm is Contrastive Divergence which allows to approximate the gradient of the likelihood to update the parameters. During this process, a cyclic Gibbs sampling is performed setting the visible units given the hidden ones and vice versa, according to the following probabilities $p$:
 
@@ -82,22 +92,7 @@ The goodness of a model is evaluated by computing the log-likelihood $\mathcal{L
 	\label{eq:loglikelihood}
 \end{equation}
 
-%%%%%%%%%%%%%%%%%%%
-\begin{figure}[!tb]
-	\includegraphics[width=0.44\textwidth]{RBM_structure.png}
-	\caption{A Restricted Boltzmann Machine (RBM) is made up of visible units, denoted as $v_i$, and hidden units, represented as $h_\mu$. These units engage with one another through interactions characterized by the weights $w_{i\mu}$. Notably, there are no direct interactions among the visible units or among the hidden units themselves.}
-	\label{fig:RBM_architecture}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%
-
 where $M$ is the number of data points, $Z$ is the partition function, $E(v,h)$ in the exponential argument $e^{-E(v,h)}=G(h)\prod_{i}{e^{H_i(h)v_i}}$ is the energy function, with $G(h)=\prod_{\mu}{e^{b_{\mu}h_{\mu}}}$ and $H_i(h)=a_i+\sum_{\mu}w_{i\mu}h_\mu$, and, in Eq.~\ref{eq:loglikelihood}, the index $h$ of the summation represents each possible state of the hidden layer.
-
-
-\section{3. Methods}
-\noindent\textbf{3.1. Theoretical implementation}
-\\
-\\
-Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikelihood}), its implementation depends on the set of values which each unit can be set on. Since the direct computation of the $Z$ function is unfeasible, due to the summation of all possible state combinations of the system, a possible approach is to split the summation separately over states $v$ and $h$.
 
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
@@ -115,23 +110,18 @@ Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikel
 \end{figure}
 %%%%%%%%%%%%%%%%%%%
 
+\section{3. Methods}
+\noindent\textbf{3.1. Theoretical implementation}
+\\
+\\
+Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikelihood}), its implementation depends on the set of values which each unit can be set on. Since the direct computation of the $Z$ function is unfeasible, due to the summation of all possible state combinations of the system, a possible approach is to split the summation separately over states $v$ and $h$.
+
 For the Bernulli case the units can assume the values $\{0,1\}$ and the partition function form can be manipulated to obtain the following expression:
 
 \begin{equation}
 	Z=\sum_v\sum_h{e^{-E(v,h)}}=q^D\sum_h{G(h)\prod_{i=1}^D{\frac{1+e^{H_i(h)}}{q}}}
 	\label{eq:Z_function_bernulli}
 \end{equation}
-
-where $q$ is the average of $1+e^{H_i(h)}\ \ \forall{i,h}$ that we introduce to avoid overflow. Concerning the training process of RBM, $v_i$ are set using real data. Weights $w_{i\mu}$ are initialized sampling values from a Gaussian distribution of mean $0$ and standard deviation of $2/\sqrt{L+D}$. Biases $b_\mu$ of hidden units are initialized to $0$. Thus $h_\mu$ are evaluated by Eq.~\ref{eq:p_of_h} before passed to Eq.~\ref{eq:p_of_v} in order to compute back $v_i$. In such evaluation it is convenient to set $a_i=\log[t_i/(1-t_i)]$; fixed the $i$-th visible unit, $t_i$ is defined as the number of times such unit is $1$ over the whole training array set, normalized over the size of the set. Referring to Eq.~\ref{eq:p_of_v}, the choice of shifting the sigmoid $\sigma(x)$ by the function $\log[t_i/(1-t_i)]$ of the average $t_i$ ensures that the units can activate properly, even given initial weights $w_{i\mu}$ close to $0$.
-
-The initialization of biases $a_i$, firstly proposed by Hinton \cite{pap2}, makes hidden units able to activate and differentiate better their activation based on data, avoiding the risk of getting stuck on values near to $0$.
-\\
-\\
-\\
-\noindent\textbf{3.2. Computation}
-\\
-\\
-We define two Python3 classes, one for the computation of the log-likelihood and the other for defining the RBM structure and managing all the input and output of the training process. Referring to Eq.~\ref{eq:loglikelihood}, in order to address the problem of overflow of $e^{H_i(h)v_i}$, we approximate the summation of powers over $h$ as a sum of the biggest ones. The purpose of this choice is to extract the biggest term out of the summation thus the applied logarithm avoids exponentiation.
 
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
@@ -143,11 +133,22 @@ We define two Python3 classes, one for the computation of the log-likelihood and
 
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
-	\includegraphics[width=0.455\textwidth]{final_L_of_CD.png}
+	\includegraphics[width=0.465\textwidth]{final_L_of_CD.png}
 	\caption{Bar chart displaying the weighted mean and standard deviation of the log-likelihood over the last epochs for different numbers of CD steps.}
 	\label{fig:final_L_of_CD}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%
+
+where $q$ is the average of $1+e^{H_i(h)}\ \ \forall{i,h}$ that we introduce to avoid overflow. Concerning the training process of RBM, $v_i$ are set using real data. Weights $w_{i\mu}$ are initialized sampling values from a Gaussian distribution of mean $0$ and standard deviation of $2/\sqrt{L+D}$. Biases $b_\mu$ of hidden units are initialized to $0$. Thus $h_\mu$ are evaluated by Eq.~\ref{eq:p_of_h} before passed to Eq.~\ref{eq:p_of_v} in order to compute back $v_i$. In such evaluation it is convenient to set $a_i=\log[t_i/(1-t_i)]$; fixed the $i$-th visible unit, $t_i$ is defined as the number of times such unit is $1$ over the whole training array set, normalized over the size of the set. Referring to Eq.~\ref{eq:p_of_v}, the choice of shifting the sigmoid $\sigma(x)$ by the function $\log[t_i/(1-t_i)]$ of the average $t_i$ ensures that the units can activate properly, even given initial weights $w_{i\mu}$ close to $0$.
+
+The initialization of biases $a_i$, firstly proposed by Hinton \cite{pap2}, makes hidden units able to activate and differentiate better their activation based on data, avoiding the risk of getting stuck on values near to $0$.
+\\
+\\
+\\
+\noindent\textbf{3.2. Computation}
+\\
+\\
+We define two Python3 classes, one for the computation of the log-likelihood and the other for defining the RBM structure and managing all the input and output of the training process. Referring to Eq.~\ref{eq:loglikelihood}, in order to address the problem of overflow of $e^{H_i(h)v_i}$, we approximate the summation of powers over $h$ as a sum of the biggest ones. The purpose of this choice is to extract the biggest term out of the summation thus the applied logarithm avoids exponentiation.
 
 Regarding the expression of the partition function shown in Eq.~\ref{eq:Z_function_bernulli}, it changes form in Spin case, since it is characterized by units taking values from $\{-1,1\}$; manipulating the second member of the equation one gets:
 
@@ -299,13 +300,6 @@ Check if your text is light, swift, and correct in exposing its passages.
 \end{thebibliography}
 
 \clearpage
-
-%%%%%%%%%%%%%%%%%%%
-\begin{figure*}[!tb]
-  \centering
-  \includegraphics[width=\textwidth]{description_assignment_LCPB_20-21.pdf}
-\end{figure*}
-%%%%%%%%%%%%%%%%%%%
 
 
 \end{document}
