@@ -158,11 +158,25 @@ Regarding the expression of the partition function shown in Eq.~\ref{eq:Z_functi
 
 For Eq.~\ref{eq:Z_function_spin} the $2\cosh(H_i(h))$ term is approximated to just $e^{H_i(h)}$ by adding a common positive value to all the exponents, which shifts them away from negative domain, and compensating that out of the summation. Thus the same approximation procedure described for Eq.~\ref{eq:loglikelihood} is applied to Eq.~\ref{eq:Z_function_spin}.
 
-To upload the values of the weights and biases during the training phase, we adopted two different gradient descent types: SGD and RMSprop, whose update equations are found in the Appendix (Eq.~\ref{eq:sgd} and Eq.~\ref{eq:rmsprop}). We also make use of the LASSO regularization (?) controlled by the constant $\gamma$ (see Eq.~\ref{eq:regu}).
+%%%%%%%%%%%%%%%%%%%
+\begin{figure}[!tb]
+	\includegraphics[width=0.44\textwidth]{fig1a.png}
+	\caption{Description...}
+	\label{fig:y}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%
 
-We define a function to visualize the evolution of the log-likelihood of a specific model throughout the training phase and another function to compute and display the mean log-likelihood and standard deviation over the last few epochs. 
+To upload the values of the weights and biases during the training phase, we adopted two different gradient descent types: SGD and RMSprop, whose update equations are found in the Appendix (Eq.~\ref{eq:sgd} and Eq.~\ref{eq:rmsprop}); we adopt the versions with the “+” sign, for gradient ascent, since we aim to maximize a monotonically increasing function. The LASSO regularization (Eq.~\ref{eq:regu}), controlled by the constant $\gamma$, is performed after applying gradient ascent during training.
 
-For our analysis, we select the set of digits $\{0,1,2\}$ from the MNIST database. We then evaluate the performance of the RBM by utilizing the visualization functions to compare different configurations of hyperparameters. In order to account for stochasticity, for each chosen set of hyperparameters we first perform ten independent training runs varying the NumPy random seed and then compute the mean log-likelihood accross runs obtaining an average trend. To derive a final log-likelihood value for each hyperparmeter configuration, we calculate a weighted average of the values of the log-likelihood over the last few training epochs. Specifically, we examine the influence of variations in the number of Contrastive Divergence steps (CD), in the number $L$ of hidden units and in parameters such as the learning rate $\eta$, $\epsilon$ and $\gamma$; here $\epsilon$ is a coefficient in the RMSprop update rule (see Eq.~\ref{eq:rmsprop}).
+We define a function to visualize the evolution of the log-likelihood of a specific model throughout the training phase and another function to compute and display the mean log-likelihood and standard deviation over the last few epochs. For our analysis, we select the set of digits $\{0,1,2\}$ from the MNIST database. We then evaluate the performance of the RBM by utilizing the visualization functions to compare different configurations of hyperparameters. In order to account for stochasticity, for each chosen set of hyperparameters we first perform ten independent training runs varying the NumPy random seed and then compute the mean log-likelihood accross runs obtaining an average trend. To derive a final log-likelihood value for each hyperparmeter configuration, we calculate a weighted average of the values of the log-likelihood over the last few training epochs. Specifically, we examine the influence of variations in the number of Contrastive Divergence steps (CD), in the number $L$ of hidden units and in parameters such as the learning rate $\eta$, $\epsilon$ and $\gamma$; here $\epsilon$ is a coefficient in the RMSprop update rule (see Eq.~\ref{eq:rmsprop}).
+
+%%%%%%%%%%%%%%%%%%%
+\begin{figure}[!tb]
+	\includegraphics[width=0.44\textwidth]{fig1a.png}
+	\caption{Description...}
+	\label{fig:z}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%
 
 Additionally, we analyze the impact of the optimizer choice for models with one-hot encoding enabled (POTTS) or disabled and either Bernoulli or Spin variables.
 
@@ -192,14 +206,6 @@ Cite Table~\ref{tab:1} to collect useful data in a clear way.
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz.
-  
-%%%%%%%%%%%%%%%%%%%
-\begin{figure}[!tb]
-  \includegraphics[width=0.44\textwidth]{fig1a.png}
-  \caption{Description...}
-  \label{fig:y}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%
 
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
@@ -214,14 +220,6 @@ Cite Table~\ref{tab:1} to collect useful data in a clear way.
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz.
-  
-%%%%%%%%%%%%%%%%%%%
-\begin{figure}[!tb]
-  \includegraphics[width=0.44\textwidth]{fig1a.png}
-  \caption{Description...}
-  \label{fig:z}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%
 
 
   zzzzzzzzzzzzzzz zzzzz zzzzzzzzzz zzzzzzz z zzzzzzzzzzz zzzz zzzzzzzzz
