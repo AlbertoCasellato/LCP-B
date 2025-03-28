@@ -102,7 +102,7 @@ Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikel
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
 	\includegraphics[width=0.44\textwidth]{L_of_epochs.jpg}
-	\caption{The evolution of the log-likelihood over training epochs for different values of L is shown. The curves represent the average log-likelihood across 10 stochastically distinct runs.}
+	\caption{The evolution of the log-likelihood over training epochs for each L is shown. The curves represent the average log-likelihood across 10 stochastically distinct runs.}
 	\label{fig:L_of_epochs}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%
@@ -110,7 +110,7 @@ Regarding the computation of the partition function $Z$ (in Eq.~\ref{eq:loglikel
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
 	\includegraphics[width=0.44\textwidth]{L_of_CD.png}
-	\caption{Description...}
+	\caption{The figure shows the evolution of the log-likelihood over training epochs for different numbers of CD steps. The curves represent the average log-likelihood across 10 stochastically distinct runs.}
 	\label{fig:L_of_CD}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%
@@ -133,8 +133,6 @@ The initialization of biases $a_i$, firstly proposed by Hinton \cite{pap2}, make
 \\
 We define two Python3 classes, one for the computation of the log-likelihood and the other for defining the RBM structure and managing all the input and output of the training process. Referring to Eq.~\ref{eq:loglikelihood}, in order to address the problem of overflow of $e^{H_i(h)v_i}$, we approximate the summation of powers over $h$ as a sum of the biggest ones. The purpose of this choice is to extract the biggest term out of the summation thus the applied logarithm avoids exponentiation.
 
-Regarding the expression of the partition function shown in Eq.~\ref{eq:Z_function_bernulli}, it changes form in Spin case, since it is characterized by units taking values from $\{-1,1\}$; manipulating the second member of the equation one gets:
-
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
 	\includegraphics[width=0.44\textwidth]{L_of_L.jpg}
@@ -145,11 +143,13 @@ Regarding the expression of the partition function shown in Eq.~\ref{eq:Z_functi
 
 %%%%%%%%%%%%%%%%%%%
 \begin{figure}[!tb]
-	\includegraphics[width=0.44\textwidth]{final_L_of_CD.png}
-	\caption{Description...}
+	\includegraphics[width=0.455\textwidth]{final_L_of_CD.png}
+	\caption{Bar chart displaying the weighted mean and standard deviation of the log-likelihood over the last epochs for different numbers of CD steps.}
 	\label{fig:final_L_of_CD}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%
+
+Regarding the expression of the partition function shown in Eq.~\ref{eq:Z_function_bernulli}, it changes form in Spin case, since it is characterized by units taking values from $\{-1,1\}$; manipulating the second member of the equation one gets:
 
 \begin{equation}
 	Z=\sum_v\sum_h{e^{-E(v,h)}}=\sum_h{G(h)\prod_{i=1}^D{2\cosh(H_i(h))}}
@@ -265,7 +265,7 @@ Check if your text is light, swift, and correct in exposing its passages.
 \end{equation}
 
 \begin{equation}
-	\boldsymbol{\theta}_{t+1}=\boldsymbol{\theta}_t-\eta_t\nabla_{\boldsymbol{\theta}}{E(\boldsymbol{\theta})}
+	\boldsymbol{\theta}_{t+1}=\boldsymbol{\theta}_t\pm\eta_t\nabla_{\boldsymbol{\theta}}{E(\boldsymbol{\theta})}
 	\label{eq:sgd}
 \end{equation}
 
@@ -274,7 +274,7 @@ Check if your text is light, swift, and correct in exposing its passages.
 	\begin{cases}
 		\boldsymbol{g}_t=\nabla_{\boldsymbol{\theta}}{E(\boldsymbol{\theta})} \\
 		\boldsymbol{s}_t=\beta{\boldsymbol{s}_{t-1}}+(1-\beta)\boldsymbol{g}_t^2 \\
-		\boldsymbol{\theta}_{t+1}=\boldsymbol{\theta}_t-\eta_t\frac{\boldsymbol{g}_t}{\sqrt{\boldsymbol{s}_t+\epsilon}}
+		\boldsymbol{\theta}_{t+1}=\boldsymbol{\theta}_t\pm\eta_t\frac{\boldsymbol{g}_t}{\sqrt{\boldsymbol{s}_t+\epsilon}}
 	\end{cases}
 	\label{eq:rmsprop}
 \end{equation}

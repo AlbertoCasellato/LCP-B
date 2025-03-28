@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2025.3.21)  28 MAR 2025 14:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2025.3.21)  28 MAR 2025 15:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -479,16 +479,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 127--135
 
  []
 
-<L_of_L.jpg, id=83, 308.352pt x 193.2018pt>
+<L_of_L.jpg, id=82, 308.352pt x 193.2018pt>
 File: L_of_L.jpg Graphic file (type jpg)
 <use L_of_L.jpg>
-Package pdftex.def Info: L_of_L.jpg  used on input line 140.
+Package pdftex.def Info: L_of_L.jpg  used on input line 138.
 (pdftex.def)             Requested size: 224.40125pt x 140.60277pt.
-<final_L_of_CD.png, id=84, 655.0071pt x 397.9668pt>
+<final_L_of_CD.png, id=83, 2046.89719pt x 1243.64626pt>
 File: final_L_of_CD.png Graphic file (type png)
 <use final_L_of_CD.png>
-Package pdftex.def Info: final_L_of_CD.png  used on input line 148.
-(pdftex.def)             Requested size: 224.40125pt x 136.33923pt.
+Package pdftex.def Info: final_L_of_CD.png  used on input line 146.
+(pdftex.def)             Requested size: 232.05093pt x 140.97633pt.
 [2 <./L_of_epochs.jpg> <./L_of_CD.png> <./L_of_L.jpg> <./final_L_of_CD.png>]
 
 LaTeX Warning: Reference `fig:x' on page 3 undefined on input line 175.
@@ -639,10 +639,10 @@ Package rerunfilecheck Info: File `Assignment.out' has not changed.
 (rerunfilecheck)             Checksum: 3F8053220B69749299862D74F9F85BA9;1401.
  ) 
 Here is how much of TeX's memory you used:
- 10984 strings out of 476091
- 168672 string characters out of 5794081
- 1875330 words of memory out of 5000000
- 31188 multiletter control sequences out of 15000+600000
+ 10985 strings out of 476091
+ 168682 string characters out of 5794081
+ 1876330 words of memory out of 5000000
+ 31189 multiletter control sequences out of 15000+600000
  520884 words of font info for 65 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,13n,76p,980b,516s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -663,7 +663,7 @@ hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/public/amsfonts/cm/cmti9.pfb>
-Output written on Assignment.pdf (5 pages, 817346 bytes).
+Output written on Assignment.pdf (5 pages, 814803 bytes).
 PDF statistics:
  231 PDF objects out of 1000 (max. 8388607)
  169 compressed objects within 2 object streams
