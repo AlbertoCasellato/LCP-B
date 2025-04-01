@@ -1,0 +1,63 @@
+This is BibTeX, Version 0.99d (TeX Live 2022/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: apsrev4-1.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: mainNotes.bib
+Database file #2: biblio.bib
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+merlin.mbs apsrev4-1.bst 2010-07-25 4.21a (PWD, AO, DPC) hacked
+Control: key (0) 
+Control: author (72) initials jnrlst
+Control: editor formatted (1) identically to author
+Control: production of article title (-1) disabled
+Control: page (0) single
+Control: year (1) truncated
+Control: production of eprint (0) enabled
+You've used 4 entries,
+            5847 wiz_defined-function locations,
+            1628 strings with 15491 characters,
+and the built_in function-call counts, 4117 in all, are:
+= -- 251
+> -- 98
+< -- 29
++ -- 37
+- -- 23
+* -- 655
+:= -- 409
+add.period$ -- 5
+call.type$ -- 4
+change.case$ -- 19
+chr.to.int$ -- 4
+cite$ -- 4
+duplicate$ -- 380
+empty$ -- 281
+format.name$ -- 56
+if$ -- 775
+int.to.chr$ -- 1
+int.to.str$ -- 12
+missing$ -- 42
+newline$ -- 64
+num.names$ -- 13
+pop$ -- 142
+preamble$ -- 1
+purify$ -- 20
+quote$ -- 0
+skip$ -- 144
+stack$ -- 0
+substring$ -- 95
+swap$ -- 376
+text.length$ -- 14
+text.prefix$ -- 0
+top$ -- 8
+type$ -- 57
+warning$ -- 0
+while$ -- 13
+width$ -- 0
+write$ -- 85
