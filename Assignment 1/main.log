@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2025.3.21)  1 APR 2025 18:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2025.3.21)  1 APR 2025 18:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -494,6 +494,12 @@ File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
 \l__pdf_internal_box=\box69
 )
 (./main.aux
+
+LaTeX Warning: Label `fig:final_L_of_CD' multiply defined.
+
+
+LaTeX Warning: Label `fig:final_L_of_CD' multiply defined.
+
 
 LaTeX Warning: Label `fig:final_L_of_CD' multiply defined.
 
