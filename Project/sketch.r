@@ -14,20 +14,27 @@ data1  = data[1:2]
 data2  = data[3:4]
 data3  = data[5:6]
 n      = dim(data)[1]
-n_iter = 10000
-res    = 200
+n_iter = 1000            # default: 10000
+res    = 10              # default: 200
 count  = 0
 delta  = n_iter / res
+work_with_xis = TRUE     # default: TRUE
 
 
-# maker of ts vector
-make_ts <- function(as_logic = FALSE, as_numeric = FALSE, param = NA) {
+# maker of ts vector (WORKING WITH ts)
+make_ts <- function(as_logic   = FALSE,
+					as_range   = FALSE,
+					as_numeric = FALSE,
+					param      = NA) {
 	if (as_numeric) {
-		ts        <- paste0("t", 1:n)
-		ts        <- as.numeric(param[ts])
+		ts            <- paste0("t", 1:n)
+		ts            <- as.numeric(param[ts])
 	} else {
 		if (as_logic) {
-			ts        <- rep(TRUE, n)
+			ts        <- rep(FALSE, n)
+			names(ts) <- paste0("t", 1:n)
+		} else if (as_range) {
+			ts        <- mapply(function(i) c(i + 0.2, i + 1.8), 0:(n - 1), SIMPLIFY = FALSE)
 			names(ts) <- paste0("t", 1:n)
 		} else {
 			ts        <- as.list(1:n)
@@ -37,6 +44,36 @@ make_ts <- function(as_logic = FALSE, as_numeric = FALSE, param = NA) {
 	return(ts)
 }
 
+# maker of xis vector (WORKING WITH xis)
+make_xis <- function(as_logic   = FALSE,
+					 as_range   = FALSE,
+					 as_numeric = FALSE,
+					 param      = NA) {
+	if (as_numeric) {
+		xis            <- paste0("xi", 2:n)
+		xis            <- as.numeric(param[xis])
+	} else {
+		if (as_logic) {
+			xis        <- rep(FALSE, (n - 1))
+			names(xis) <- paste0("xi", 2:n)
+		} else if (as_range) {
+			xis        <- lapply(2:n, function(i) c(0.4, 1.6))
+			names(xis) <- paste0("xi", 2:n)
+		} else {
+			xis        <- as.list(rep(1, (n - 1)))
+			names(xis) <- paste0("xi", 2:n)
+		}
+	}
+	return(xis)
+}
+
+if (work_with_xis) {
+	maker = make_xis
+} else {
+	maker = make_ts
+}
+
+
 # maker of vector of initial parameters
 param_ini   = list(A        = 10,
 				   #omega    = 11,
@@ -45,8 +82,9 @@ param_ini   = list(A        = 10,
 				   tau      = 1,
 				   mu       = 0,
 				   sigma_xi = 0.05)
-param_ini   = c(param_ini,   make_ts(as_logic   = FALSE,
-								     as_numeric = FALSE))
+param_ini   = c(param_ini,   maker(as_logic   = FALSE,
+								   as_range   = FALSE,
+								   as_numeric = FALSE))
 
 # turning off working with log-scale inside infer.timedeppar
 param_logic = list(A        = FALSE,
@@ -56,16 +94,29 @@ param_logic = list(A        = FALSE,
 				   tau      = FALSE,
 				   mu       = FALSE,
 				   sigma_xi = FALSE)
-param_logic = c(param_logic, make_ts(as_logic   = TRUE,
-								     as_numeric = FALSE))
+param_logic = c(param_logic, maker(as_logic   = TRUE,
+								   as_range   = FALSE,
+								   as_numeric = FALSE))
 param_logic = unlist(param_logic)
-#################################
+
+# ranges
+param_ranges = list(A        = c(5,    15),
+				    phi      = c(0,    2 * pi),
+				    sigma_y  = c(0.01, 10),
+				    tau      = c(0.05, 20),
+				    mu       = c(-10,  10),
+				    sigma_xi = c(0.01, 10))
+param_ranges = c(param_ranges, maker(as_logic   = FALSE,
+								     as_range   = TRUE,
+								     as_numeric = FALSE))
+#########################################################
 
 
 # loglikelihood function
 loglikeli <- function(param, data) {
 	# feedback
 	count <<- count + 1
+	print(count)
 	if (count %% delta == 0) {
 		prog = (count * 100) / (delta * res)
 		print(paste(prog, "%"))
@@ -75,10 +126,13 @@ loglikeli <- function(param, data) {
 	#t1        = data$t        # t_{i}
 	#t2        = data$t + 1    # t_{i+1}
 	y         = data$y
-	ts        = make_ts(as_numeric = TRUE, param = param)
-	t0        = ts - 1
-	t1        = ts
-	t2        = ts + 1
+	#ts        = make_ts(as_numeric = TRUE, param = param)
+	#t0        = ts - 1
+	#t1        = ts
+	#t2        = ts + 1
+	xis       = make_xis(as_numeric = TRUE, param = param)
+	xi0       = xis[1:(n - 2)]
+	xi1       = xis[2:(n - 1)]
 	A         = param$A
 	#omega     = param$omega
 	omega     = 11
@@ -88,17 +142,26 @@ loglikeli <- function(param, data) {
 	mu        = param$mu
 	sigma_xi  = param$sigma_xi
 	#
+	# WORKING WITH ts:
 	# epsilon_{y,  i} = [y_i - (A * cos(omega * t_i + phi))] / sigma_y
-	y_likeli  = y - (A * cos(omega * t1 + phi)) / sigma_y
+	#y_likeli  = y - (A * cos(omega * t1 + phi)) / sigma_y
+	#
+	# WORKING WITH xis:
+	#y_likeli  = y - (A * cos(omega * (sum_{j=i}^{2}(xi_j) + 1) + phi)) / sigma_y
+	y_likeli  = y - (A * cos(omega * c(1, cumsum(xis) + 1) + phi)) / sigma_y
 	y_likeli  = sum(dnorm(y_likeli,  0, 1, TRUE))
 	#
 	# epsilon_{xi, i} = C * sqrt{tau / 2} / sigma_xi
-	# where C = xi_{i+1} - xi_i - (mu - xi_i) / tau
-	# or    C = t_{i+1} + (1/tau - 2) * t_i + (1 - 1/tau) * t_{i-1} - mu/tau
-	xi_lideli = (t2 + ((1 / tau) - 2) * t1 + (1 - (1 / tau)) * t0 - (mu / tau)) * sqrt(tau / 2) / sigma_xi
-	xi_lideli = sum(dnorm(xi_lideli, 0, 1, TRUE))
+	# WORKING WITH ts:
+	# C = t_{i+1} + (1/tau - 2) * t_i + (1 - 1/tau) * t_{i-1} - mu/tau
+	#xi_likeli = (t2 + ((1 / tau) - 2) * t1 + (1 - (1 / tau)) * t0 - (mu / tau)) * sqrt(tau / 2) / sigma_xi
 	#
-	return(y_likeli + xi_lideli)
+	# WORKING WITH xis:
+	# C = xi_{i+1} - xi_i - (mu - xi_i) / tau
+	xi_likeli = (xi1 - xi0 - (1 / tau) * (mu - xi0)) * sqrt(tau / 2) / sigma_xi
+	xi_likeli = sum(dnorm(xi_likeli, 0, 1, TRUE))
+	#
+	return(y_likeli + xi_likeli)
 }
 
 logprior <- function(param) {
@@ -120,14 +183,17 @@ logprior <- function(param) {
 }
 
 CALL <- function(data) {
-	res <- infer.timedeppar(loglikeli      = loglikeli,
-                            param.ini      = param_ini,
-                            param.log      = param_logic,
-                            #param.ou.fixed = c(omega = 11),
-						    param.logprior = logprior,
-                            n.iter         = n_iter,
-                            data           = data,
-						    verbose        = 0)
+	res <- infer.timedeppar(loglikeli           = loglikeli,
+							loglikeli.keepstate = FALSE,
+							param.ini           = param_ini,
+							param.range         = param_ranges,
+							param.log           = param_logic,
+							#param.ou.fixed      = c(omega = 11),
+							param.logprior      = logprior,
+							task                = "start",
+							n.iter              = n_iter,
+							data                = data,
+							verbose             = 0)
 	return(res)
 }
 
