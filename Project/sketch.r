@@ -2,6 +2,7 @@
 # install.packages("readxl")
 
 # libraries
+set.seed(42)
 library(readxl)
 library(timedeppar)
 
@@ -14,8 +15,9 @@ data1  = data[1:2]
 data2  = data[3:4]
 data3  = data[5:6]
 n      = dim(data)[1]
-n_iter = 1000            # default: 10000
-res    = 10              # default: 200
+omega  = 2 * pi / 11
+n_iter = 10000             # default: 10000
+res    = 200               # default: 200
 count  = 0
 delta  = n_iter / res
 work_with_xis = TRUE     # default: TRUE
@@ -76,7 +78,6 @@ if (work_with_xis) {
 
 # maker of vector of initial parameters
 param_ini   = list(A        = 10,
-				   #omega    = 11,
 				   phi      = 2,
 				   sigma_y  = 0.05,
 				   tau      = 1,
@@ -113,10 +114,10 @@ param_ranges = c(param_ranges, maker(as_logic   = FALSE,
 
 
 # loglikelihood function
-loglikeli <- function(param, data) {
+loglikeli <- function(param) {
 	# feedback
 	count <<- count + 1
-	print(count)
+	#print(count)
 	if (count %% delta == 0) {
 		prog = (count * 100) / (delta * res)
 		print(paste(prog, "%"))
@@ -125,7 +126,7 @@ loglikeli <- function(param, data) {
 	#t0        = data$t - 1    # t_{i-1}
 	#t1        = data$t        # t_{i}
 	#t2        = data$t + 1    # t_{i+1}
-	y         = data$y
+	#y         = data$y
 	#ts        = make_ts(as_numeric = TRUE, param = param)
 	#t0        = ts - 1
 	#t1        = ts
@@ -135,7 +136,6 @@ loglikeli <- function(param, data) {
 	xi1       = xis[2:(n - 1)]
 	A         = param$A
 	#omega     = param$omega
-	omega     = 11
 	phi       = param$phi
 	sigma_y   = param$sigma_y
 	tau       = param$tau
@@ -144,11 +144,11 @@ loglikeli <- function(param, data) {
 	#
 	# WORKING WITH ts:
 	# epsilon_{y,  i} = [y_i - (A * cos(omega * t_i + phi))] / sigma_y
-	#y_likeli  = y - (A * cos(omega * t1 + phi)) / sigma_y
+	#y_likeli  = (y - A * cos(omega * t1 + phi)) / sigma_y
 	#
 	# WORKING WITH xis:
 	#y_likeli  = y - (A * cos(omega * (sum_{j=i}^{2}(xi_j) + 1) + phi)) / sigma_y
-	y_likeli  = y - (A * cos(omega * c(1, cumsum(xis) + 1) + phi)) / sigma_y
+	y_likeli  = (y - A * cos(omega * c(1, cumsum(xis) + 1) + phi)) / sigma_y
 	y_likeli  = sum(dnorm(y_likeli,  0, 1, TRUE))
 	#
 	# epsilon_{xi, i} = C * sqrt{tau / 2} / sigma_xi
@@ -161,43 +161,70 @@ loglikeli <- function(param, data) {
 	xi_likeli = (xi1 - xi0 - (1 / tau) * (mu - xi0)) * sqrt(tau / 2) / sigma_xi
 	xi_likeli = sum(dnorm(xi_likeli, 0, 1, TRUE))
 	#
+	print(y_likeli + xi_likeli)
 	return(y_likeli + xi_likeli)
 }
 
 logprior <- function(param) {
 	A         = param_ini$A
 	#omega     = param_ini$omega
-	#omega     = 11
 	phi       = param_ini$phi
 	sigma_y   = param_ini$sigma_y
 	sigma_xi  = param_ini$sigma_xi
 	tau       = param_ini$tau
 	mu        = param_ini$mu
 	#
-	return(dnorm(param["A"],              A,    A / 3, TRUE) +   # A
-		   dnorm(param["phi"],           phi, phi / 2, TRUE) +   # phi
-		   dnorm(param["sigma_y"],   sigma_y,     0.5, TRUE) +   # sigma_y
-		   dnorm(param["sigma_xi"], sigma_xi,     0.5, TRUE) +   # sigma_xi
-		   dnorm(param["tau"],           tau,       1, TRUE) +   # tau
-		   dnorm(param["mu"],             mu,       1, TRUE))    # mu
+	prior     = dnorm(param["A"],              A,    A / 2, TRUE) +   # A
+				dnorm(param["phi"],           phi,     phi, TRUE) +   # phi
+				dnorm(param["sigma_y"],   sigma_y,       1, TRUE) +   # sigma_y
+				dnorm(param["sigma_xi"], sigma_xi,       1, TRUE) +   # sigma_xi
+				dnorm(param["tau"],           tau,       2, TRUE) +   # tau
+				dnorm(param["mu"],             mu,       2, TRUE) +   # mu
+				sum(dnorm(make_xis(as_numeric = TRUE,
+							       param      = param), 1, 1, TRUE))  # xis
+	#print(prior)
+	return(prior)
 }
 
-CALL <- function(data) {
+CALL <- function() {
 	res <- infer.timedeppar(loglikeli           = loglikeli,
 							loglikeli.keepstate = FALSE,
 							param.ini           = param_ini,
 							param.range         = param_ranges,
 							param.log           = param_logic,
-							#param.ou.fixed      = c(omega = 11),
 							param.logprior      = logprior,
 							task                = "start",
 							n.iter              = n_iter,
-							data                = data,
 							verbose             = 0)
 	return(res)
 }
+#
+y = data1$y
+res1 = CALL()
+#
+#y = data2$y
+#res2 = CALL()
+#
+#y = data3$y
+#res3 = CALL()
 
 
-res1 = CALL(data1)
-res2 = CALL(data2)
-res3 = CALL(data3)
+PLOT <- function(res, d) {
+	params = res[["param.maxpost"]]
+	A      = params$A
+	phi    = params$phi
+	xis    = make_xis(as_numeric = TRUE, param = params)
+	ts     = c(1, cumsum(xis) + 1)
+	ys     = A * cos(omega * ts + phi)
+	#
+	plot(ts, ys,
+		 type = "l",
+		 col  = "blue",
+		 ylim = c(min(c(ys, d$y)),
+				  max(c(ys, d$y))))
+	lines(d$t, d$y,
+		  col = "red")
+	legend("topright", c("inferred", "data"), lty = 1, col = c("blue", "red"))
+}
+
+PLOT(res1, data1)
