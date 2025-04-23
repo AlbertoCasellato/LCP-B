@@ -158,11 +158,12 @@ loglikeli <- function(param) {
 	#
 	# WORKING WITH xis:
 	# C = xi_{i+1} - xi_i - (mu - xi_i) / tau
-	xi_likeli = (xi1 - xi0 - (1 / tau) * (mu - xi0)) * sqrt(tau / 2) / sigma_xi
-	xi_likeli = sum(dnorm(xi_likeli, 0, 1, TRUE))
+	#xi_likeli = (xi1 - xi0 - (1 / tau) * (mu - xi0)) * sqrt(tau / 2) / sigma_xi
+	#xi_likeli = sum(dnorm(xi_likeli, 0, 1, TRUE))
 	#
-	print(y_likeli + xi_likeli)
-	return(y_likeli + xi_likeli)
+	#print(y_likeli + xi_likeli)
+	#return(y_likeli + xi_likeli)
+	return(y_likeli)
 }
 
 logprior <- function(param) {
@@ -179,9 +180,9 @@ logprior <- function(param) {
 				dnorm(param["sigma_y"],   sigma_y,       1, TRUE) +   # sigma_y
 				dnorm(param["sigma_xi"], sigma_xi,       1, TRUE) +   # sigma_xi
 				dnorm(param["tau"],           tau,       2, TRUE) +   # tau
-				dnorm(param["mu"],             mu,       2, TRUE) +   # mu
-				sum(dnorm(make_xis(as_numeric = TRUE,
-							       param      = param), 1, 1, TRUE))  # xis
+				dnorm(param["mu"],             mu,       2, TRUE)# +   # mu
+				#sum(dnorm(make_xis(as_numeric = TRUE,
+				#			       param      = param), 1, 1, TRUE))  # xis
 	#print(prior)
 	return(prior)
 }
@@ -214,8 +215,11 @@ PLOT <- function(res, d) {
 	A      = params$A
 	phi    = params$phi
 	xis    = make_xis(as_numeric = TRUE, param = params)
+	#xis    = xis[1:40]
 	ts     = c(1, cumsum(xis) + 1)
+	#ts     = ts[1:40]
 	ys     = A * cos(omega * ts + phi)
+	#ys     = ys[1:40]
 	#
 	plot(ts, ys,
 		 type = "l",
@@ -228,3 +232,8 @@ PLOT <- function(res, d) {
 }
 
 PLOT(res1, data1)
+
+
+
+xis = res2[["param.maxpost"]]
+xis = make_xis(as_numeric = TRUE, param = xis)
