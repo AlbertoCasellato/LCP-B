@@ -9,122 +9,99 @@ library(timedeppar)
 ##############
 # reading data
 data   = read_excel("~/Scrivania/MOD B/esercizi/github/Project/data/syntheticData.xlsx", skip = 1)
-data   = as.data.frame(data[c(1,2,4,5,7,8)])
+data   = as.data.frame(data[c(1, 2, 4, 5, 7, 8)])
 colnames(data) = c("t", "y", "t", "y", "t", "y")
 data   = na.omit(data)
 data1  = data[1:2]
 data2  = data[3:4]
 data3  = data[5:6]
 n      = dim(data)[1]
-omega  = 2 * pi / 11     # period T = 11 fixed;
-n_iter = 750             # default: 10000;
-res    = 10              # default: 200;
-count  = 0
-delta  = n_iter / res
-#####################
+n_interval = 100             # default: 50
+n_iter     = 5000            # default: 10000
+omega      = 2 * pi / 11                 # fixed (period T = 11)
+count      = 0                           # fixed
+max_count  = n_iter * (n_interval + 1)   # fixed
+resol  = 3                   # default: 5
+delta  = floor(max_count * resol / 100)
+#
+# time-dependent parameters
+mu         = 0
+tau        = 1
+sigma_xi   = 0.03
+#################
 
-
-############################
-# xis's values initializator
-xis.ini        <- function() {
-	xis        <- as.list(rep(1, (n - 1)))
-	names(xis) <- paste0("xi", 2:n)
-	return(xis)
-}
-
-# xis's logic initializator
-xis.logic      <- function() {
-	xis        <- rep(FALSE, (n - 1))
-	names(xis) <- paste0("xi", 2:n)
-	return(xis)
-}
-
-# xis's ranges initializator
-xis.range      <- function() {
-	xis        <- lapply(2:n, function(i) c(0.4, 1.6))
-	names(xis) <- paste0("xi", 2:n)
-	return(xis)
-}
-
-xis.extractor  <- function(param) {
-	xis        <- paste0("xi", 2:n)
-	xis        <- as.numeric(param[xis])
-	return(xis)
-}
 
 #######################################
 # maker of vector of initial parameters
-param_ini   = list(A        = 10,
-				   phi      = 2,
-				   sigma_y  = 0.05,
-				   tau      = 1,
-				   mu       = 0,
-				   sigma_xi = 0.05)
-param_ini   = c(param_ini, xis.ini())
+param_ini    = list(A        = 10,
+					phi      = 2,
+				    sigma_y  = 0.05,
+				    xi       = data.frame(t  = 1:(n - 1),
+										  xi = 1))
 
 # turning off working with log-scale inside infer.timedeppar
-param_logic = list(A        = FALSE,
-				   phi      = FALSE,
-				   sigma_y  = FALSE,
-				   tau      = FALSE,
-				   mu       = FALSE,
-				   sigma_xi = FALSE)
-param_logic = unlist(c(param_logic, xis.logic()))
+param_logic  = c(A           = FALSE,
+				 phi         = FALSE,
+				 sigma_y     = FALSE,
+				 xi          = FALSE)
 
-# ranges initialization
+# ranges initialization (both time-dependent and not)
 param_ranges = list(A        = c(5,    15),
-				    phi      = c(0,    2 * pi),
-				    sigma_y  = c(0.01, 10),
-				    tau      = c(0.05, 20),
-				    mu       = c(-10,  10),
-				    sigma_xi = c(0.01, 10))
-param_ranges = c(param_ranges, xis.range())
-###########################################
+					phi      = c(0,    2 * pi),
+					sigma_y  = c(0.01, 10),
+					xi_mean  = c(-10,  10),
+					xi_sd    = c(0.01, 10),
+					xi_gamma = c(0.05, 20))
+
+# vector of initial values of parameters associated to time-dependent xi
+param_ou_ini = c(xi_mean     = mu,
+				 xi_sd       = sigma_xi * sqrt(2 / tau),
+				 xi_gamma    = 1 / tau)
+#######################################
 
 
 ########################
 # loglikelihood function
 loglikeli <- function(param) {
-	# feedback
-	count <<- count + 1
-	#print(count)
-	if (count %% delta == 0) {
-		prog = (count * 100) / (delta * res)
-		print(paste(prog, "%"))
-	}
-	#
-	xis       = xis.extractor(param = param)
-	xi0       = xis[1:(n - 2)]
-	xi1       = xis[2:(n - 1)]
+	xis       = param$xi$xi
 	A         = param$A
 	phi       = param$phi
 	sigma_y   = param$sigma_y
-	tau       = param$tau
-	mu        = param$mu
-	sigma_xi  = param$sigma_xi
 	#
 	# WORKING WITH xis:
 	#y_likeli  = y - (A * cos(omega * (sum_{j=i}^{2}(xi_j) + 1) + phi)) / sigma_y
 	y_likeli  = (y - A * cos(omega * c(1, cumsum(xis) + 1) + phi)) / sigma_y
-	y_likeli  = sum(dnorm(y_likeli,  0, 1, TRUE))
+	y_likeli  = sum(dnorm(y_likeli, 0, 1, TRUE))
 	#
+	# feedback
+	count <<- count + 1
+	if (count %% delta == 0) {
+		prog = count * resol / delta
+		print(paste(prog, "%. loglikeli: ", y_likeli))
+	}
 	return(y_likeli)
 }
 
-logprior <- function(param) {
+logprior    <- function(param) {
 	A         = param_ini$A
 	phi       = param_ini$phi
 	sigma_y   = param_ini$sigma_y
-	sigma_xi  = param_ini$sigma_xi
-	tau       = param_ini$tau
-	mu        = param_ini$mu
 	#
-	prior     = dnorm(param["A"],              A,    A / 2, TRUE) +   # A
-				dnorm(param["phi"],           phi,     phi, TRUE) +   # phi
-				dnorm(param["sigma_y"],   sigma_y,       1, TRUE) +   # sigma_y
-				dnorm(param["sigma_xi"], sigma_xi,       1, TRUE) +   # sigma_xi
-				dnorm(param["tau"],           tau,       2, TRUE) +   # tau
-				dnorm(param["mu"],             mu,       2, TRUE)     # mu
+	prior     = dnorm(param[["A"]],        A,        A / 2, TRUE) +   # A
+				dnorm(param[["phi"]],      phi,      phi,   TRUE) +   # phi
+				dnorm(param[["sigma_y"]],  sigma_y,  1,     TRUE)     # sigma_y
+	#
+	return(prior)
+}
+
+ou_logprior <- function(param) {
+	xi_mean   = param_ou_ini[["xi_mean"]]
+	xi_sd     = param_ou_ini[["xi_sd"]]
+	xi_gamma  = param_ou_ini[["xi_gamma"]]
+	#
+	prior     = dnorm(param[["xi_mean"]],  xi_mean,  2,     TRUE) +   # sigma_xi
+				dnorm(param[["xi_sd"]],    xi_sd,    1,     TRUE) +   # tau
+				dnorm(param[["xi_gamma"]], xi_gamma, 1,     TRUE)     # mu
 	#
 	return(prior)
 }
@@ -136,9 +113,12 @@ CALL <- function() {
 							param.range         = param_ranges,
 							param.log           = param_logic,
 							param.logprior      = logprior,
+							param.ou.ini        = param_ou_ini,
+							param.ou.logprior   = ou_logprior,
 							task                = "start",
 							n.iter              = n_iter,
-							verbose             = 0)
+							verbose             = 0,
+							control             = list(n.interval = n_interval))
 	return(res)
 }
 #
