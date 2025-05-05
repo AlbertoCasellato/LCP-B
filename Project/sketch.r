@@ -49,6 +49,7 @@ param_logic  = c(A           = FALSE,
 param_ranges = list(A        = c(5,    15),
 					phi      = c(0,    2 * pi),
 					sigma_y  = c(0.01, 10),
+					xi       = c(0.1,   2),
 					xi_mean  = c(-10,  10),
 					xi_sd    = c(0.01, 10),
 					xi_gamma = c(0.05, 20))
