@@ -71,8 +71,8 @@ loglikeli <- function(param) {
 	#
 	# WORKING WITH xis:
 	#y_likeli  = y - (A * cos(omega * (sum_{j=i}^{2}(xi_j) + 1) + phi)) / sigma_y
-	y_likeli  = (y - A * cos(omega * c(1, cumsum(xis) + 1) + phi)) / sigma_y
-	y_likeli  = sum(dnorm(y_likeli, 0, 1, TRUE))
+	y_likeli  = (A * cos(omega * c(1, cumsum(xis) + 1) + phi))
+	y_likeli  = sum(dnorm(y_likeli, y, sigma_y, TRUE))
 	#
 	# feedback
 	count <<- count + 1
@@ -126,11 +126,11 @@ CALL <- function() {
 y = data1$y
 res1 = CALL()
 #
-#y = data2$y
-#res2 = CALL()
+y = data2$y
+res2 = CALL()
 #
-#y = data3$y
-#res3 = CALL()
+y = data3$y
+res3 = CALL()
 
 
 PLOT <- function(res, d) {
