@@ -8,7 +8,8 @@ library(timedeppar)
 
 ##############
 # reading data
-data   = read_excel("~/Scrivania/MOD B/esercizi/github/Project/data/syntheticData.xlsx", skip = 1)
+#data   = read_excel("~/Scrivania/MOD B/esercizi/github/Project/data/syntheticData.xlsx", skip = 1)
+data   = read_excel("~/data/syntheticData.xlsx", skip = 1)
 data   = as.data.frame(data[c(1, 2, 4, 5, 7, 8)])
 colnames(data) = c("t", "y", "t", "y", "t", "y")
 data   = na.omit(data)
@@ -16,8 +17,8 @@ data1  = data[1:2]
 data2  = data[3:4]
 data3  = data[5:6]
 n      = dim(data)[1]
-n_interval = 100             # default: 50
-n_iter     = 5000            # default: 10000
+n_interval = 100              # default: 50
+n_iter     = 50000            # default: 10000
 omega      = 2 * pi / 11                 # fixed (period T = 11)
 count      = 0                           # fixed
 max_count  = n_iter * (n_interval + 1)   # fixed
@@ -119,9 +120,11 @@ CALL <- function() {
 							task                = "start",
 							n.iter              = n_iter,
 							verbose             = 0,
-							control             = list(n.interval = n_interval))
+							control             = list(n.interval = n_interval,
+													   n.adapt    = 0.2 * n_iter))
 	return(res)
 }
+
 #
 y = data1$y
 res1 = CALL()
@@ -131,31 +134,14 @@ res2 = CALL()
 #
 y = data3$y
 res3 = CALL()
+#############
 
+saveRDS(res1, file = "res1.rds")
+saveRDS(res2, file = "res2.rds")
+saveRDS(res3, file = "res3.rds")
+################################
 
-PLOT <- function(res, d) {
-	params = res[["param.maxpost"]]
-	A      = params$A
-	phi    = params$phi
-	xis    = xis.extractor(param = params)
-	#xis    = xis[1:40]
-	ts     = c(1, cumsum(xis) + 1)
-	#ts     = ts[1:40]
-	ys     = A * cos(omega * ts + phi)
-	#ys     = ys[1:40]
-	#
-	plot(ts, ys,
-		 type = "l",
-		 col  = "blue",
-		 ylim = c(min(c(ys, d$y)),
-				  max(c(ys, d$y))))
-	lines(d$t, d$y,
-		  col = "red")
-	legend("topright", c("inferred", "data"), lty = 1, col = c("blue", "red"))
-}
-
-PLOT(res1, data1)
-
-#xis = res1[["param.maxpost"]]
-#xis = xis.extractor(param = xis)
-#plot(xis, type = "l")
+#res1 <- readRDS("res1.rds")
+#res2 <- readRDS("res2.rds")
+#res3 <- readRDS("res3.rds")
+############################
