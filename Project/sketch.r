@@ -17,18 +17,19 @@ data1  = data[1:2]
 data2  = data[3:4]
 data3  = data[5:6]
 n      = dim(data)[1]
-n_interval = 100              # default: 50
-n_iter     = 50000            # default: 10000
-omega      = 2 * pi / 11                 # fixed (period T = 11)
-count      = 0                           # fixed
-max_count  = n_iter * (n_interval + 1)   # fixed
-resol  = 3                   # default: 5
+n_interval   = 40               # default: 50
+n_iter       = 200000           # default: 10000
+n_adapt      = 0.75 * n_iter
+omega        = 2 * pi / 11                 # fixed (period T = 11)
+count        = 0                           # fixed
+max_count    = n_iter * (n_interval + 1)   # fixed
+resol  = 1                                 # default: 5
 delta  = floor(max_count * resol / 100)
 #
 # time-dependent parameters
-mu         = 0
+mu         = 1
 tau        = 1
-sigma_xi   = 0.03
+sigma_xi   = 0.02
 #################
 
 
@@ -43,17 +44,17 @@ param_ini    = list(A        = 10,
 # turning off working with log-scale inside infer.timedeppar
 param_logic  = c(A           = FALSE,
 				 phi         = FALSE,
-				 sigma_y     = FALSE,
-				 xi          = FALSE)
+				 sigma_y     = TRUE,
+				 xi          = TRUE)
 
 # ranges initialization (both time-dependent and not)
-param_ranges = list(A        = c(5,    15),
-					phi      = c(0,    2 * pi),
-					sigma_y  = c(0.01, 10),
-					xi       = c(0.1,   2),
-					xi_mean  = c(-10,  10),
-					xi_sd    = c(0.01, 10),
-					xi_gamma = c(0.05, 20))
+param_ranges = list(A        = c(5,     15),
+					phi      = c(0,      2 * pi),
+					sigma_y  = c(0.01,  15),
+					xi       = c(0.01,   3),
+					xi_mean  = c(0.01,   6),
+					xi_sd    = c(0.005,  5),
+					xi_gamma = c(0.005, 15))
 
 # vector of initial values of parameters associated to time-dependent xi
 param_ou_ini = c(xi_mean     = mu,
@@ -90,8 +91,8 @@ logprior    <- function(param) {
 	sigma_y   = param_ini$sigma_y
 	#
 	prior     = dnorm(param[["A"]],        A,        A / 2, TRUE) +   # A
-				dnorm(param[["phi"]],      phi,      phi,   TRUE) +   # phi
-				dnorm(param[["sigma_y"]],  sigma_y,  1,     TRUE)     # sigma_y
+				dnorm(param[["phi"]],      phi,      pi,    TRUE) +   # phi
+				dnorm(param[["sigma_y"]],  sigma_y,  5,     TRUE)     # sigma_y
 	#
 	return(prior)
 }
@@ -101,9 +102,9 @@ ou_logprior <- function(param) {
 	xi_sd     = param_ou_ini[["xi_sd"]]
 	xi_gamma  = param_ou_ini[["xi_gamma"]]
 	#
-	prior     = dnorm(param[["xi_mean"]],  xi_mean,  2,     TRUE) +   # sigma_xi
-				dnorm(param[["xi_sd"]],    xi_sd,    1,     TRUE) +   # tau
-				dnorm(param[["xi_gamma"]], xi_gamma, 1,     TRUE)     # mu
+	prior     = dnorm(param[["xi_mean"]],  xi_mean,  0.5,   TRUE) +   # mu
+				dnorm(param[["xi_sd"]],    xi_sd,    1.5,   TRUE) +   # sigma_xi
+				dnorm(param[["xi_gamma"]], xi_gamma, 3,     TRUE)     # 1 / tau
 	#
 	return(prior)
 }
@@ -120,28 +121,29 @@ CALL <- function() {
 							task                = "start",
 							n.iter              = n_iter,
 							verbose             = 0,
-							control             = list(n.interval = n_interval,
-													   n.adapt    = 0.2 * n_iter))
+							control             = list(n.interval   = n_interval,
+													   n.adapt      = n_adapt,
+													   save.diag    = TRUE))
 	return(res)
 }
 
 #
-y = data1$y
-res1 = CALL()
+#y = data1$y
+#res1 = CALL()
 #
-y = data2$y
-res2 = CALL()
+#y = data2$y
+#res2 = CALL()
 #
 y = data3$y
 res3 = CALL()
 #############
 
-saveRDS(res1, file = "res1.rds")
-saveRDS(res2, file = "res2.rds")
+#saveRDS(res1, file = "res1.rds")
+#saveRDS(res2, file = "res2.rds")
 saveRDS(res3, file = "res3.rds")
 ################################
 
-#res1 <- readRDS("res1.rds")
-#res2 <- readRDS("res2.rds")
-#res3 <- readRDS("res3.rds")
+#res1 <- readRDS("~/Scrivania/MOD B/esercizi/github/Project/res1.rds")
+#res2 <- readRDS("~/Scrivania/MOD B/esercizi/github/Project/res2.rds")
+#res3 <- readRDS("~/Scrivania/MOD B/esercizi/github/Project/res3.rds")
 ############################
