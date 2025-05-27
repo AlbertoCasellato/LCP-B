@@ -2,8 +2,8 @@ data {
     int<lower=1>                  n;             // number of armonics
     int<lower=1>                  l;             // number of armonics
     vector[n]                     y;             // data points
-    real<lower=20,      upper=25> t0;            // starting time
-    real<lower=0.00005, upper=10> omega_fixed;   // omega fixed (first one for convention)
+    real<lower=0.20,  upper=0.25> t0;            // starting time
+    real<lower=0.005, upper=1000> omega_fixed;   // omega fixed (first one for convention)
     vector<lower=0>[l - 1]        omega_min;     // omega inferior limit
     vector<lower=0>[l - 1]        omega_max;     // omega superior limit
     vector<lower=0>[l]            A_min;         // A inferior limit
@@ -13,15 +13,15 @@ data {
 }
 
 parameters {
-    vector<lower=0.01,    upper=5>[l]         A;          // amplitudes
-    vector<lower=0.01,    upper=6.3>[l]       phi;        // phases
-                                                          // comment the following block to turn off
-    vector<lower=0.00015, upper=0.016>[l - 1] omega;      // others omega (T from 0.5y to 120ky)
-    real<lower=0.01,      upper=8>            sigma_y;    // sigma of ys
-    real<lower=0.01,      upper=320>          tau;        // inverse of gamma
-    real<lower=15,        upper=25>           mu;         // average
-    real<lower=0.01,      upper=5>            sigma_xi;   // sigma of xis
-    vector<lower=10,      upper=30>[n - 1]    xi;         // xis
+    vector<lower=0.01,  upper=5>[l]         A;          // amplitudes
+    vector<lower=0.01,  upper=6.3>[l]       phi;        // phases
+                                                        // comment the following block to turn off
+    vector<lower=0.015, upper=1.6>[l - 1]   omega;      // others omega (T from 0.5y to 120ky)
+    real<lower=0.01,    upper=8>            sigma_y;    // sigma of ys
+    real<lower=0.01,    upper=320>          tau;        // inverse of gamma
+    real<lower=0.15,    upper=0.25>         mu;         // average
+    real<lower=0.005,   upper=3.5>          sigma_xi;   // sigma of xis
+    vector<lower=0.1,   upper=0.3>[n - 1]   xi;         // xis
 }
 
 model {
@@ -35,11 +35,11 @@ model {
         A[i]         ~ uniform(A_min[i],   A_max[i]);
         phi[i]       ~ uniform(phi_min[i], phi_max[i]);
     }
-    sigma_y          ~ uniform(0.01,   8);
-    tau              ~ uniform(0.1,  300);
-    mu               ~ uniform(16,    24);
-    sigma_xi         ~ uniform(0.01,   5);
-    xi[1]            ~ uniform(18,    23);
+    sigma_y          ~ uniform(0.01,    8);
+    tau              ~ uniform(0.1,   300);
+    mu               ~ uniform(0.16, 0.24);
+    sigma_xi         ~ uniform(0.005,   3);
+    xi[1]            ~ uniform(0.18, 0.23);
     //
     // priors [2/2] + distributions for y[n] [1/2]
     M_1[1]           = A[1] * cos(omega_fixed * t0  + phi[1]);
