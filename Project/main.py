@@ -16,17 +16,17 @@ if isOnCVVM:
     data_file = "~/data/solar_data.xlsx"
     harm_file = "~/data/solar_harmonics.xlsx"
     stan_file = "~/STAN/model.stan"
-    iter_s    = 100      # OR:  50000
-    iter_w    = 100      # OR: 150000
-    cs        = 2         # OR: 4
+    iter_s    =  5000      # OR:  50000
+    iter_w    = 10000      # OR: 150000
+    cs        = 6          # OR: 4
     #ths_per_c = 2         # OR: 2
-    parl_cs   = 2
+    parl_cs   = 6
 else:
     data_file = "~/Scrivania/MOD B/esercizi/github/Project/data/solar_data.xlsx"
     harm_file = "~/Scrivania/MOD B/esercizi/github/Project/data/solar_harmonics.xlsx"
     stan_file = "~/Scrivania/MOD B/esercizi/github/Project/STAN/model.stan"
-    iter_s    = 50
-    iter_w    = 50
+    iter_s    = 5000
+    iter_w    = 5000
     cs        = 1
     #ths_per_c = 2
     parl_cs   = 1
@@ -41,7 +41,7 @@ data         = pd.read_excel(data_file, skiprows = 0)
 data         = data.iloc[4:, [1, 2]]
 data.columns = ["age", "y"]
 data["age"]  = data["age"] + 55
-data         = data[data["age"] < 30000 + 55]
+data         = data[data["age"] < 10000 + 55]
 data["y"]    = data["y"] - data["y"].mean()
 data.reset_index(drop = True, inplace = True)
 data.index   = data.index + 1
