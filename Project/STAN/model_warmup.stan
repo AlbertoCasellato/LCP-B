@@ -8,8 +8,6 @@ data {
     real<lower=0>                            om_f_upper;
     real<lower=t0_lower,   upper=t0_upper>   t0;            // starting time
     real<lower=om_f_lower, upper=om_f_upper> omega_fixed;   // omega fixed (first one for convention)
-    vector<lower=0>[l - 1]                   omega_ini;     // starting values of not-fixed omega       // omega
-    vector<lower=0>[l - 1]                   sigma_omega;   // sigmas of not-fixed omega
     vector<lower=0>[l]                       A_ini;         // starting values of A                     // A
     vector<lower=0>[l]                       sigma_A;       // sigmas of A
     vector<lower=0>[l]                       phi_ini;       // starting values of phi                   // phi
@@ -39,7 +37,6 @@ data {
 parameters {
     vector<lower=A_lower,  upper=A_upper>[l]      A;          // amplitudes
     vector<lower=0.001,    upper=6.284>[l]        phi;        // phases
-    vector<lower=om_lower, upper=om_upper>[l - 1] omega;      // not-fixed omegas
     real<lower=s_y_lower,  upper=s_y_upper>       sigma_y;    // sigma of y
     real<lower=0.01,       upper=350>             tau;        // inverse of gamma
     real<lower=mu_lower,   upper=mu_upper>        mu;         // average of xi
@@ -51,7 +48,6 @@ transformed parameters {
     vector[n]     t;            // absolute timestamps
     vector[n]     y_hat;        // pre-computed y model
     vector[n - 2] xi_hat;       // pre-computed xi model
-    vector[l]     omega_full;   // concatenate fixed + free omegas
     real eff_sigma_xi;          // effective sigma xi
     real gamma = 1 / tau;       // gamma parameter
     //
@@ -61,13 +57,9 @@ transformed parameters {
         t[i]        = t[i - 1] + xi[i - 1];
     }
     //
-    // make omega_full from omega_fixed and others omega
-    omega_full[1]   = omega_fixed;
-    omega_full[2:l] = omega;
-    //
     // pre-compute y_hat[n]
     for (j in 1:n) {
-        y_hat[j]    = dot_product(A, cos((omega_full .* t[j]) + phi));
+        y_hat[j]    = dot_product(A, cos((omega_fixed .* t[j]) + phi));
     }
     //
     // pre-compute xi_hat[n - 2] and eff_sigma_xi
@@ -79,7 +71,6 @@ model {
     tau   ~ uniform(0.05, 300);
     //
     A     ~ lognormal(A_ini,     sigma_A);
-    omega ~ lognormal(omega_ini, sigma_omega);
     phi   ~ lognormal(phi_ini,   sigma_phi);
     //
     // model for xi
