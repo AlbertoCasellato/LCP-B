@@ -1,6 +1,5 @@
 data {
     int<lower=1>                             n;             // number of armonics
-    int<lower=1>                             l;             // number of armonics
     vector[n]                                y;             // data points
     real<lower=0>                            t0_lower;
     real<lower=0>                            t0_upper;
@@ -8,10 +7,10 @@ data {
     real<lower=0>                            om_f_upper;
     real<lower=t0_lower,   upper=t0_upper>   t0;            // starting time
     real<lower=om_f_lower, upper=om_f_upper> omega_fixed;   // omega fixed (first one for convention)
-    vector<lower=0>[l]                       A_ini;         // starting values of A                     // A
-    vector<lower=0>[l]                       sigma_A;       // sigmas of A
-    vector<lower=0>[l]                       phi_ini;       // starting values of phi                   // phi
-    vector<lower=0>[l]                       sigma_phi;     // sigmas of phi
+    real<lower=0>                            A_ini;         // starting values of A                     // A
+    real<lower=0>                            sigma_A;       // sigmas of A
+    real<lower=0>                            phi_ini;       // starting values of phi                   // phi
+    real<lower=0>                            sigma_phi;     // sigmas of phi
     real<lower=0>                            xi_lower;
     real<lower=0>                            xi_upper;
     real<lower=0>                            s_xi_lower;
@@ -35,8 +34,8 @@ data {
 }
 
 parameters {
-    vector<lower=A_lower,  upper=A_upper>[l]      A;          // amplitudes
-    vector<lower=0.001,    upper=6.284>[l]        phi;        // phases
+    real<lower=A_lower,    upper=A_upper>         A;          // amplitudes
+    real<lower=0.001,      upper=6.284>           phi;        // phases
     real<lower=s_y_lower,  upper=s_y_upper>       sigma_y;    // sigma of y
     real<lower=0.01,       upper=350>             tau;        // inverse of gamma
     real<lower=mu_lower,   upper=mu_upper>        mu;         // average of xi
@@ -58,9 +57,7 @@ transformed parameters {
     }
     //
     // pre-compute y_hat[n]
-    for (j in 1:n) {
-        y_hat[j]    = dot_product(A, cos((omega_fixed .* t[j]) + phi));
-    }
+    y_hat           = A * cos((t .* omega_fixed) + phi);
     //
     // pre-compute xi_hat[n - 2] and eff_sigma_xi
     eff_sigma_xi    = sigma_xi * sqrt(2 * gamma);
@@ -70,8 +67,8 @@ transformed parameters {
 model {
     tau   ~ uniform(0.05, 300);
     //
-    A     ~ lognormal(A_ini,     sigma_A);
-    phi   ~ lognormal(phi_ini,   sigma_phi);
+    A     ~ lognormal(A_ini,   sigma_A);
+    phi   ~ lognormal(phi_ini, sigma_phi);
     //
     // model for xi
     mu            ~ lognormal(mu_mean,   mu_std);
@@ -82,12 +79,4 @@ model {
     // model for y
     sigma_y  ~ lognormal(s_y_mean, s_y_std);
     y        ~ normal(y_hat,       sigma_y);
-}
-
-generated quantities {
-    vector[n] y_rep;
-    //
-    for (k in 1:n) {
-        y_rep[k] = normal_rng(y_hat[k], sigma_y);
-    }
 }

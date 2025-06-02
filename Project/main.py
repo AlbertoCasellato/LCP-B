@@ -9,7 +9,7 @@ SAVE = lambda data, filepath: pickle.dump(data, open(filepath + ".pkl", "wb"))  
 LOAD = lambda filepath:       pickle.load(open(filepath       + ".pkl", "rb"))   # read file
 
 # control parameter
-is_warmup      = True
+is_warmup      = False
 is_old_harm    = False
 scaling_factor = 100
 dataset        = 3
@@ -17,32 +17,32 @@ isOnCVVM       = True
 
 
 # limits
-xi_lower   = 0.1   if is_warmup else 5       / scaling_factor
-xi_upper   = 1.9   if is_warmup else 32      / scaling_factor
-s_xi_lower = 0.01  if is_warmup else 0.1     / scaling_factor
-s_xi_upper = 4.0   if is_warmup else 5.0     / scaling_factor
-mu_lower   = 0.5   if is_warmup else 16      / scaling_factor
-mu_upper   = 1.5   if is_warmup else 24      / scaling_factor
-t0_lower   = 0.9   if is_warmup else 23      / scaling_factor
-t0_upper   = 1.1   if is_warmup else 23.4    / scaling_factor
-om_f_lower = 0.56  if is_warmup else 0.00006 * scaling_factor   # 2 * pi / 100k
-om_f_upper = 0.58  if is_warmup else 1       * scaling_factor   # 2 * pi / 5
+xi_lower   = 0.1   / scaling_factor if is_warmup else 5       / scaling_factor
+xi_upper   = 1.9   / scaling_factor if is_warmup else 32      / scaling_factor
+s_xi_lower = 0.01  / scaling_factor if is_warmup else 0.1     / scaling_factor
+s_xi_upper = 4.0   / scaling_factor if is_warmup else 5.0     / scaling_factor
+mu_lower   = 0.5   / scaling_factor if is_warmup else 16      / scaling_factor
+mu_upper   = 1.5   / scaling_factor if is_warmup else 24      / scaling_factor
+t0_lower   = 0.9   / scaling_factor if is_warmup else 23      / scaling_factor
+t0_upper   = 1.1   / scaling_factor if is_warmup else 23.4    / scaling_factor
+om_f_lower = 0.56  * scaling_factor if is_warmup else 0.00006 * scaling_factor   # 2 * pi / 100k
+om_f_upper = 0.58  * scaling_factor if is_warmup else 1       * scaling_factor   # 2 * pi / 5
 #
-A_lower    = 2     if is_warmup else 0.001
-A_upper    = 18    if is_warmup else 5
-om_lower   = 0.56  if is_warmup else 0.0001  * scaling_factor   # 2 * pi / 50k
-om_upper   = 0.58  if is_warmup else 0.03    * scaling_factor   # 2 * pi / 200
-s_y_lower  = 0.1   if is_warmup else 0.05
-s_y_upper  = 8     if is_warmup else 2
+A_lower    = 2                      if is_warmup else 0.001
+A_upper    = 18                     if is_warmup else 5
+om_lower   = 0.56  * scaling_factor if is_warmup else 0.0001  * scaling_factor   # 2 * pi / 50k
+om_upper   = 0.58  * scaling_factor if is_warmup else 0.03    * scaling_factor   # 2 * pi / 200
+s_y_lower  = 0.1                    if is_warmup else 0.05
+s_y_upper  = 8                      if is_warmup else 2
 #
-mu_mean    = 1     if is_warmup else 20      / scaling_factor
-mu_std     = 0.25  if is_warmup else 0.5     / scaling_factor
-s_xi_mean  = 1     if is_warmup else 0.46    / scaling_factor
-s_xi_std   = 0.5   if is_warmup else 0.25    / scaling_factor
-xi1_mean   = 1     if is_warmup else 20.5    / scaling_factor
-xi1_std    = 0.1   if is_warmup else 1       / scaling_factor
-s_y_mean   = 1     if is_warmup else 0.44
-s_y_std    = 1     if is_warmup else 0.4
+mu_mean    = 1     / scaling_factor if is_warmup else 20      / scaling_factor
+mu_std     = 0.25  / scaling_factor if is_warmup else 0.5     / scaling_factor
+s_xi_mean  = 1     / scaling_factor if is_warmup else 0.46    / scaling_factor
+s_xi_std   = 0.5   / scaling_factor if is_warmup else 0.25    / scaling_factor
+xi1_mean   = 1     / scaling_factor if is_warmup else 20.5    / scaling_factor
+xi1_std    = 0.1   / scaling_factor if is_warmup else 1       / scaling_factor
+s_y_mean   = 1                      if is_warmup else 0.44
+s_y_std    = 1                      if is_warmup else 0.4
 
 
 data_file      = "~/data/syntheticData.xlsx" if is_warmup else "~/data/YES_data.xlsx"
@@ -51,10 +51,10 @@ old_harm_file  =          "~/data/None.xlsx" if is_warmup else "~/data/OLD_harmo
 harm_test_file =          "~/data/None.xlsx" if is_warmup else "~/data/Borneo Stalagmite 26.05.25.xlsx"
 stan_file      = "~/STAN/model.stan"
 warm_stan_file = "~/STAN/model_warmup.stan"
-iter_s         =  50000 if is_warmup else  10000
-iter_w         = 150000 if is_warmup else 150000
-cs             =      1 if is_warmup else 6
-parl_cs        =      1 if is_warmup else 6
+iter_s         =  50000 if is_warmup else 1000
+iter_w         = 150000 if is_warmup else 1000
+cs             =      1 if is_warmup else 1
+parl_cs        =      1 if is_warmup else 1
 
 if not isOnCVVM:
     data_file      = "~/Scrivania/MOD B/esercizi/github/Project/data" + data_file[6:]
@@ -63,8 +63,8 @@ if not isOnCVVM:
     harm_test_file = "~/Scrivania/MOD B/esercizi/github/Project/data" + harm_test_file[6:]
     stan_file      = "~/Scrivania/MOD B/esercizi/github/Project/STAN" + stan_file[6:]
     warm_stan_file = "~/Scrivania/MOD B/esercizi/github/Project/STAN" + warm_stan_file[6:]
-    iter_s         = 50
-    iter_w         = 50
+    iter_s         = 150
+    iter_w         = 150
     cs             = 1
     parl_cs        = 1
 ######################
@@ -104,17 +104,16 @@ if is_warmup:
     data = {
             "n"           : n,
             "y"           : y,
-            "l"           : 1,
             "t0_lower"    : t0_lower,
             "t0_upper"    : t0_upper,
             "om_f_lower"  : om_f_lower,
             "om_f_upper"  : om_f_upper,
-            "t0"          : 1,
-            "omega_fixed" : 2 * pi / 11,
-            "A_ini"       : [10.0],
-            "sigma_A"     : [1.0],
-            "phi_ini"     : [2.0],
-            "sigma_phi"   : [0.3],
+            "t0"          : 1 / scaling_factor,
+            "omega_fixed" : scaling_factor * 2 * pi / 11,
+            "A_ini"       : 10.0,
+            "sigma_A"     : 1.0,
+            "phi_ini"     : 2.0,
+            "sigma_phi"   : 0.3,
             "xi_lower"    : xi_lower,
             "xi_upper"    : xi_upper,
             "s_xi_lower"  : s_xi_lower,
@@ -135,18 +134,17 @@ if is_warmup:
             "xi1_std"     : xi1_std,
             "s_y_mean"    : s_y_mean,
             "s_y_std"     : s_y_std
-
     }
     #
     # starting points
     init = {
-        'A'        : [10.0],
-        'phi'      : [2.0],
+        'A'        : 10.0,
+        'phi'      : 2.0,
         'sigma_y'  : 0.15,
         'tau'      : 1.0,
-        'mu'       : 1.0,
-        'sigma_xi' : 0.03,
-        'xi'       : [1] * (n - 1)
+        'mu'       : 1.0  / scaling_factor,
+        'sigma_xi' : 0.03 / scaling_factor,
+        'xi'       : [1   / scaling_factor] * (n - 1)
     }
     #
     #
@@ -312,6 +310,7 @@ res = model.sample(data              = data,
 
 save_name                 = "res" + str(dataset) if is_warmup else "res"
 if is_old_harm: save_name = save_name + "_old_harm"
+#save_name = save_name + "_fast"
 
 # results
 #A        = res.stan_variable('A')
@@ -324,7 +323,11 @@ if is_old_harm: save_name = save_name + "_old_harm"
 
 # plotting
 #res.summary()[1:7]
-#plt.plot(res.summary()["Mean"][7:])
-#plt.show()
 
 SAVE(res, save_name)
+
+
+
+#res = LOAD(save_name)
+#plt.plot(res.stan_variable('xi').mean(0) * scaling_factor)
+#plt.show()
