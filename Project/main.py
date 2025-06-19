@@ -11,20 +11,21 @@ LOAD = lambda filepath:       pickle.load(open(filepath       + ".pkl", "rb"))  
 # control parameter
 is_warmup      = False
 is_old_harm    = False
-scaling_factor = 100
-dataset        = 3
-isOnCVVM       = True
+scaling_factor = 10000
+ts_scale       = 1000
+dataset        = 2
+isOnCVVM       = False
 
 
 # limits
-xi_lower   = 0.1   / scaling_factor if is_warmup else 5       / scaling_factor
-xi_upper   = 1.9   / scaling_factor if is_warmup else 32      / scaling_factor
+xi_lower   = 0.1   / scaling_factor if is_warmup else 5       / (scaling_factor / ts_scale)
+xi_upper   = 1.9   / scaling_factor if is_warmup else 32      / (scaling_factor / ts_scale)
 s_xi_lower = 0.01  / scaling_factor if is_warmup else 0.1     / scaling_factor
 s_xi_upper = 4.0   / scaling_factor if is_warmup else 5.0     / scaling_factor
 mu_lower   = 0.5   / scaling_factor if is_warmup else 16      / scaling_factor
 mu_upper   = 1.5   / scaling_factor if is_warmup else 24      / scaling_factor
-t0_lower   = 0.9   / scaling_factor if is_warmup else 23      / scaling_factor
-t0_upper   = 1.1   / scaling_factor if is_warmup else 23.4    / scaling_factor
+t0_lower   = 0.9   / scaling_factor if is_warmup else 23      / (scaling_factor / ts_scale)
+t0_upper   = 1.1   / scaling_factor if is_warmup else 23.4    / (scaling_factor / ts_scale)
 om_f_lower = 0.56  * scaling_factor if is_warmup else 0.00006 * scaling_factor   # 2 * pi / 100k
 om_f_upper = 0.58  * scaling_factor if is_warmup else 1       * scaling_factor   # 2 * pi / 5
 #
@@ -233,7 +234,7 @@ else:
     #####
     #
     # make xis
-    ts  = data.iloc[:, [0]].values.reshape(n) / scaling_factor
+    ts  = ts_scale * data.iloc[:, [0]].values.reshape(n) / scaling_factor
     xis = ts[1:] - ts[:-1]
     # np.insert(np.cumsum(xis) + ts[0], 0, ts[0])
     #
@@ -294,18 +295,48 @@ else:
 
 
 # sampling
-res = model.sample(data              = data,
-                   inits             = init,
-                   iter_sampling     = iter_s,
-                   iter_warmup       = iter_w,
-                   chains            = cs,
-                   parallel_chains   = parl_cs,
-                   seed              = 42,
-                   adapt_delta       = 0.998,
-                   max_treedepth     = 20,
-                   metric            = "dense_e",
-                   adapt_engaged     = True,
-                   show_console      = True)
+"""
+res = model.variational(data              = data,
+                        inits             = init,
+                        iter              = 20000,
+                        grad_samples      = 20,
+                        seed              = 42,
+                        tol_rel_obj       = 1e-8,
+                        eval_elbo         = 1000,
+                        draws             = 10000,
+                        adapt_iter        = 500,
+                        eta               = 0.01,
+                        adapt_engaged     = True,
+                        require_converged = True,
+                        show_console      = True)
+
+res = model.variational(data              = data,
+                        inits             = init,
+                        iter_sampling     = iter_s,
+                        iter_warmup       = iter_w,
+                        chains            = cs,
+                        parallel_chains   = parl_cs,
+                        seed              = 42,
+                        adapt_delta       = 0.998,
+                        max_treedepth     = 20,
+                        metric            = "dense_e",
+                        require_converged = True,
+                        adapt_engaged     = True,
+                        show_console      = True)
+"""
+
+res = model.sample(data                   = data,
+                   inits                  = init,
+                   iter_sampling          = iter_s,
+                   iter_warmup            = iter_w,
+                   chains                 = cs,
+                   parallel_chains        = parl_cs,
+                   seed                   = 42,
+                   adapt_delta            = 0.998,
+                   max_treedepth          = 20,
+                   metric                 = "dense_e",
+                   adapt_engaged          = True,
+                   show_console           = True)
 
 
 save_name                 = "res" + str(dataset) if is_warmup else "res"

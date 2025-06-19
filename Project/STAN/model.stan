@@ -60,6 +60,7 @@ transformed parameters {
     for (i in 2:n) {
         t[i]        = t[i - 1] + xi[i - 1];
     }
+    t = t ./ 1000;
     //
     // make omega_full from omega_fixed and others omega
     omega_full[1]   = omega_fixed;
